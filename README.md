@@ -36,24 +36,24 @@ This is an app that organizes and manages backlog for different types of media. 
 # Client / Frontend
 
 ## React Router Routes (React App)
-| Path                      | Component            | Permissions | Behavior                                                     |
-| ------------------------- | -------------------- | ----------- | ------------------------------------------------------------ |
-| `/`                       | SplashPage           | public `<Route>`            | Home page                                        |
-| `/signup`                 | SignupPage           | anon only  `<AnonRoute>`    | Signup form, link to login, navigate to homepage after signup |
-| `/login`                  | LoginPage            | anon only `<AnonRoute>`     | Login form, link to signup, navigate to homepage after login  |
-| `/logout`                 | n/a                  | anon only `<AnonRoute>`     | Navigate to homepage after logout, expire session             |
-| `/home`                   | Home                 | user only `<PrivateRoute>`  | Shows the available lists of backlog elements                 |
-| `/home/series`            | Home for TV Series   | user only `<PrivateRoute>`  | Shows all tv series on backlog                                |
-| `/home/films`             | Home for Films       | user only `<PrivateRoute>`  | Shows all films on backlog                                    |
-| `/home/games`             | Home for VideoGames  | user only `<PrivateRoute>`  | Shows all games on backlog                                    |
-| `/add/series`             | Add for TV series    | user only  `<PrivateRoute>` | Add a tv series to the backlog                                |
-| `/add/films`              | Add for Films        | user only `<PrivateRoute>`  | Add a film to the backlog                                     |
-| `/add/games`              | Add for VideoGames   | user only `<PrivateRoute>`  | Add a videogame to the bac                                    |
-| `/profile`                | Profile              | user only  `<PrivateRoute>` | Check profile with stat information                           |
-| `/done/series`            | Done list for Series | user only  `<PrivateRoute>` | Shows all tv series finished                                  |
-| `/done/films`             | Done list for films  | user only `<PrivateRoute>`  | Shows all films finished                                      |
-| `/done/games`             | Done list for games  | user only `<PrivateRoute>`  | Shows all videogames finished                                 |
-
+| Path                      | Component                      | Permissions | Behavior                                                     |
+| ------------------------- | --------------------           | ----------- | ------------------------------------------------------------ |
+| `/`                       | SplashPage                     | public `<Route>`            | Home page                                        |
+| `/signup`                 | SignupPage                     | anon only  `<AnonRoute>`    | Signup form, link to login, navigate to homepage after signup |
+| `/login`                  | LoginPage                      | anon only `<AnonRoute>`     | Login form, link to signup, navigate to homepage after login  |
+| `/logout`                 | n/a                            | user only `<PrivateRoute>`  | Navigate to homepage after logout, expire session             |
+| `/backlog/series`         | NavBar, ElementList, FooterBar | user only `<PrivateRoute>`  | Shows all tv series on backlog                                |
+| `/backlog/films`          | NavBar, ElementList, FooterBar | user only `<PrivateRoute>`  | Shows all films on backlog                                    |
+| `/backlog/games`          | NavBar, ElementList, FooterBar | user only `<PrivateRoute>`  | Shows all games on backlog                                    |
+| `/search/series`          | SearchForm, SearchResults      | user only  `<PrivateRoute>` | Search a tv series to be added                                |
+| `/search/films`           | SearchForm, SearchResults      | user only `<PrivateRoute>`  | Search a film to be added                                     |
+| `/search/games`           | SearchForm, SearchResults      | user only `<PrivateRoute>`  | Search a game to be added                                     |
+| `/add/:id`                | ElementInfo                    | user only `<PrivateRoute>`  | Add an element to the backlog                                 |
+| `/profile`                | Profile, Stats                 | user only  `<PrivateRoute>` | Check profile with stat information                           |
+| `/done/series`            | Done list for Series           | user only  `<PrivateRoute>` | Shows all tv series finished                                  |
+| `/done/films`             | Done list for films            | user only `<PrivateRoute>`  | Shows all films finished                                      |
+| `/done/games`             | Done list for games            | user only `<PrivateRoute>`  | Shows all videogames finished                                 |
+          
 
 ## Components
 
@@ -90,7 +90,6 @@ This is an app that organizes and manages backlog for different types of media. 
   - auth.signup(user)
   - auth.logout()
   - auth.me()
-  - auth.getUser() // synchronous
 
 - Backlog Service
   - backlog.filter(type, status) // for different types of media and if they are done or not
@@ -99,7 +98,10 @@ This is an app that organizes and manages backlog for different types of media. 
   - backlog.delete(id)
   - backlog.update(id)
   
-
+- External API
+  - API for games
+  - API for series
+  - API for films
 
 
 <br>
@@ -132,6 +134,8 @@ Media model
    type: {type: String, required: true},
    done: {type: Boolean, required: true},
    platform: {type: String, required: true},
+   image: {type: String, required: true}
+   description: {type, String, required: true}
    user: {type: Schema.Types.ObjectId,ref:'User'},
  }
 ```
@@ -148,16 +152,16 @@ Media model
 | POST        | `/auth/signup`                | {name, email, password}      | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
 | POST        | `/auth/login`                 | {username, password}         | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session    |
 | POST        | `/auth/logout`                | (empty)                      | 204            | 400          | Logs out the user                                            |
-| POST        | `/search/add`                 | {subscriotion, title, type}  |                | 400          | Add new backlog element                                        |
-| GET         | `/home/series`                | {type, done}                 |                | 400          | Show series elements                                         |
-| GET         | `/home/films`                 | {type, done}                 |                |              | Show film elements                                           |
-| GET         | `/home/games`                 | {type, done}                 |                |              | Show games elements                                          |
-| GET         | `/home/element/:id`           | {id}                         | 201            | 400          | Show specific element                                        |
-| PUT         | `/home/films/update/:id`      | {id}                         | 200            | 400          | edit element                                                 |
-| DELETE      | `/home/games/delete/:id`      | {id}                         | 201            | 400          | delete element                                               |
-| GET         | `/done/series`                | {type, done}                 |                | 400          | Show series elements                                         |
-| GET         | `/done/films`                 | {type, done}                 |                |              | Show film elements                                           |
-| GET         | `/done/games`                 | {type, done}                 |                |              | Show games elements                                          |
+| POST        | `/search/add`                 | {platform, title, type, id}  |                | 400          | Add new backlog element and add to user                                               |
+| GET         | `/backlog/series`             |                              |                | 400          | Show series elements                                           |
+| GET         | `/backlog/films`              |                              |                |              | Show film elements                                           |
+| GET         | `/backlog/games`              |                              |                |              | Show games elements                                          |
+| GET         | `/:id`                        |                              | 201            | 400          | Show specific element                                        |
+| PUT         | `/update/:id`                 |                              | 200            | 400          | edit element                                                 |
+| DELETE      | `/delete/:id`                 |                              | 201            | 400          | delete element                                               |
+| GET         | `/done/series`                |                              |                | 400          | Show series elements                                         |
+| GET         | `/done/films`                 |                              |                |              | Show film elements                                           |
+| GET         | `/done/games`                 |                              |                |              | Show games elements                                          |
 
 
 
@@ -168,16 +172,16 @@ Media model
 
 ### Trello/Kanban
 
-[Link to your trello board]() 
+[Link to your trello board]("https://trello.com/b/iloDccrZ/backlog-quest") 
 or picture of your physical board
 
 ### Git
 
 The url to your repository and to your deployed project
 
-[Client repository Link]()
+[Client repository Link]("https://github.com/jorgeberrizbeitia/backlog-quest")
 
-[Server repository Link]()
+[Server repository Link]("https://github.com/jorgeberrizbeitia/backlog-quest-server")
 
 [Deployed App Link]()
 
