@@ -156,9 +156,9 @@ Media model
 | GET         | `/backlog/series`             |                              |                | 400          | Show series elements                                           |
 | GET         | `/backlog/films`              |                              |                |              | Show film elements                                           |
 | GET         | `/backlog/games`              |                              |                |              | Show games elements                                          |
-| GET         | `/:id`                        |                              | 201            | 400          | Show specific element                                        |
-| PUT         | `/update/:id`                 |                              | 200            | 400          | edit element                                                 |
-| DELETE      | `/delete/:id`                 |                              | 201            | 400          | delete element                                               |
+| GET         | `/media/:id`                        |                              | 201            | 400          | Show specific element                                        |
+| PUT         | `/media/:id`                 |                              | 200            | 400          | edit element                                                 |
+| DELETE      | `/media/:id`                 |                              | 201            | 400          | delete element                                               |
 | GET         | `/done/series`                |                              |                | 400          | Show series elements                                         |
 | GET         | `/done/films`                 |                              |                |              | Show film elements                                           |
 | GET         | `/done/games`                 |                              |                |              | Show games elements                                          |
@@ -172,16 +172,16 @@ Media model
 
 ### Trello/Kanban
 
-[Link to your trello board]("https://trello.com/b/iloDccrZ/backlog-quest") 
+[Link to your trello board](https://trello.com/b/iloDccrZ/backlog-quest) 
 or picture of your physical board
 
 ### Git
 
 The url to your repository and to your deployed project
 
-[Client repository Link]("https://github.com/jorgeberrizbeitia/backlog-quest")
+[Client repository Link](https://github.com/jorgeberrizbeitia/backlog-quest)
 
-[Server repository Link]("https://github.com/jorgeberrizbeitia/backlog-quest-server")
+[Server repository Link](https://github.com/jorgeberrizbeitia/backlog-quest-server)
 
 [Deployed App Link]()
 

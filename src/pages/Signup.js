@@ -3,18 +3,39 @@ import { Link } from "react-router-dom";
 import { withAuth } from "./../lib/Auth";
 
 class Signup extends Component {
-  state = { username: "", password: "", email: "",  };
+  state = {
+    username: "",
+    password: "",
+    email: "",
+    platforms: []
+  };
 
   handleFormSubmit = event => {
     event.preventDefault();
-    const { username, password } = this.state;
+    const { username, password, platforms } = this.state;
 
-    this.props.signup(username, password);
+    this.props.signup(username, password, platforms);
   };
 
   handleChange = event => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
+  };
+
+  togglePlatform = event => {
+    event.preventDefault();
+
+    const { name } = event.target;
+    let newPlatforms = this.state.platforms;
+
+    if (newPlatforms.includes(name)) {
+      newPlatforms.splice(newPlatforms.indexOf(name), 1);
+    } else {
+      newPlatforms.push(name);
+    }
+
+    this.setState({ platforms: newPlatforms });
+    console.log(this.state.platforms);
   };
 
   render() {
@@ -39,6 +60,17 @@ class Signup extends Component {
             value={password}
             onChange={this.handleChange}
           />
+          <br/>
+          <button onClick={this.togglePlatform} name="Netflix">Netflix</button>
+          <button onClick={this.togglePlatform} name="Amazon Prime">Amazon Prime</button>
+          <button onClick={this.togglePlatform} name="Disney+">Disney+</button>
+          <button onClick={this.togglePlatform} name="HBO Now">HBO Now</button>
+          <button onClick={this.togglePlatform} name="Plex">Plex</button>
+          <button onClick={this.togglePlatform} name="Other">Other</button>
+
+          <ul>
+            <p>{this.state.platforms}</p>
+          </ul>
 
           <input type="submit" value="Signup" />
         </form>
