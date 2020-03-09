@@ -2,33 +2,33 @@ import React, { Component } from "react";
 import { withAuth } from "../lib/Auth";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import BacklogFilmInfo from "../components/BacklogFilmInfo";
 
 class Backlog extends Component {
   state = {
     media: [],
-    filteredMedia: [],
+    filteredMedia: [], // media state mutated through filter by media type
     randomClick: false,
-    previousFilteredMedia: [] // prev state
+    previousFilteredMedia: [] // previous state for use in random button toggle off
   };
 
+  // to get updated data from backend
   getAllBacklog = () => {
+    // THIS SHOULD GO TO BACKEND SERVICES
     axios
       .get(`http://localhost:5000/api/backlog`, { withCredentials: true })
       .then(apiResponse => {
+        let firstFilteredArray = apiResponse.data.filter(e => e.type === "Film"); // To show only films on first backlog load
         this.setState({
           media: apiResponse.data,
-          filteredMedia: apiResponse.data,
-          previousFilteredMedia: apiResponse.data,
+          filteredMedia: firstFilteredArray,
+          previousFilteredMedia: firstFilteredArray,
           randomClick: false
         });
       });
   };
 
-  componentDidMount() {
-    //  fetch the data from API befor initial render
-    this.getAllBacklog();
-  }
-
+  // to filter backlog list by media type (Films, Series and Games)
   filterMedia = event => {
     let initialState = [...this.state.media];
     let newState = initialState.filter(e => e.type === event.target.name);
@@ -39,6 +39,7 @@ class Backlog extends Component {
     });
   };
 
+  // to select a random media from list
   randomMedia = () => {
     if (this.state.randomClick === false) {
       let previousFilteredState = this.state.filteredMedia;
@@ -57,24 +58,9 @@ class Backlog extends Component {
     }
   };
 
-  deleteMedia = (event, media) => {
-    event.preventDefault();
-    console.log(media);
-    axios
-      .delete(`http://localhost:5000/api/media/${media._id}`, {
-        withCredentials: true
-      })
-      .then(() => this.getAllBacklog())
-      .catch(err => console.log(err));
-  };
-
-  handleChange = event => {
-    const { id, value } = event.target;
-    this.updatePlatform(id, value);
-  };
-
+  // to update the platform via dropdown onChange
   updatePlatform = (id, value) => {
-
+    // THIS SHOULD GO TO BACKEND SERVICES
     axios
       .put(
         `http://localhost:5000/api/media/${id}`,
@@ -88,6 +74,22 @@ class Backlog extends Component {
       .then(() => this.getAllBacklog())
       .catch(err => console.log(err));
   };
+
+  // to delete element from database and refresh
+  deleteMedia = mediaId => {
+    // THIS SHOULD GO TO BACKEND SERVICES
+    axios
+      .delete(`http://localhost:5000/api/media/${mediaId}`, {
+        withCredentials: true
+      })
+      .then(() => this.getAllBacklog())
+      .catch(err => console.log(err));
+  };
+
+  componentDidMount() {
+    //  fetch the data from API befor initial render
+    this.getAllBacklog();
+  }
 
   render() {
     const { filteredMedia } = this.state;
@@ -103,29 +105,17 @@ class Backlog extends Component {
         </div>
         <h1>Backlog</h1>
         <ul>
-          {filteredMedia.map(media => {
+          {filteredMedia.map(eachMedia => {
             return (
               <li>
-                <b>{media.title}</b> in <b>{media.platform}</b>
-                <div>
-                  {/* This will be a component called from title button above */}
-                  <select
-                    id={media._id}
-                    onChange={this.handleChange}
-                    name="platforms"
-                    value={media.platform}
-                  >
-                    <option value="Netflix">Netflix</option>
-                    <option value="Amazon Prime">Amazon Prime</option>
-                    <option value="Disney+">Disney+</option>
-                    <option value="HBO Now">HBO Now</option>
-                    <option value="Plex">Plex</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <button onClick={event => this.deleteMedia(event, media)}>
-                    delete
-                  </button>
-                </div>
+                <b>{eachMedia.title}</b> in <b>{eachMedia.platform}</b>
+                <button onClick={this.showInfo}></button>
+                <BacklogFilmInfo
+                  eachMediaProp={eachMedia}
+                  userProp={this.props.user}
+                  updatePlatformProp={this.updatePlatform}
+                  deleteMediaProp={this.deleteMedia}
+                />
               </li>
             );
           })}

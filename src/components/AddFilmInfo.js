@@ -4,40 +4,69 @@ import axios from "axios";
 export class AddFilmInfo extends Component {
   state = {
     selectedResult: this.props.selectedResultProp,
-    selectedPlatform: ""
+    selectedPlatform: "",
+    selectedMediaType: this.props.searchTypeProp,
+    availablePlatforms: this.props.userProp.platforms // passed from withAuth HOC through Backlog
   };
 
-  handleChange = (event) => {
+  handleChange = event => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
+    console.log(value)
   };
 
   addResult = (event, media, ImageUrl) => {
     event.preventDefault();
-    const { title, vote_average, overview, release_date } = media;
-
-    axios
-      .post(
-        "http://localhost:5000/api/add",
-        {
-          title,
-          type: "Film",
-          done: false,
-          platform: "Netflix",
-          image: ImageUrl,
-          ranking: vote_average,
-          description: overview,
-          releaseDate: release_date
-        },
-        { withCredentials: true }
-      )
-      .then(data => console.log("Film created:", data))
-      .catch(err => console.log(err));
+    if (this.state.selectedMediaType === "Film") {
+      // API FOR FILMS
+      const { title, vote_average, overview, release_date } = media;
+      // THIS SHOULD GO TO BACKEND API SERVICES
+      axios
+        .post(
+          "http://localhost:5000/api/add",
+          {
+            title, // Different name for series
+            type: this.state.selectedMediaType,
+            done: false,
+            platform: this.state.selectedPlatform,
+            image: ImageUrl,
+            ranking: vote_average,
+            description: overview,
+            releaseDate: release_date // Different name for series
+          },
+          { withCredentials: true }
+        )
+        .then(data => console.log("Film created:", data))
+        .catch(err => console.log(err));
+    } else if (this.state.selectedMediaType === "Series") {
+      // API FOR SERIES
+      const { name, vote_average, overview, first_air_date } = media;
+      // THIS SHOULD GO TO BACKEND API SERVICES
+      axios
+        .post(
+          "http://localhost:5000/api/add",
+          {
+            title: name,
+            type: this.state.selectedMediaType,
+            done: false,
+            platform: this.state.selectedPlatform,
+            image: ImageUrl,
+            ranking: vote_average,
+            description: overview,
+            releaseDate: first_air_date
+          },
+          { withCredentials: true }
+        )
+        .then(data => console.log("Film created:", data))
+        .catch(err => console.log(err));
+    }
   };
 
   render() {
-    const { selectedResult, selectedPlatform } = this.state;
-    const ImageUrl = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" + selectedResult.poster_path;
+    const { selectedResult, selectedPlatform, availablePlatforms } = this.state;
+    const ImageUrl =
+      "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" +
+      selectedResult.poster_path;
     return (
       <li>
         {selectedResult.title}
@@ -50,12 +79,12 @@ export class AddFilmInfo extends Component {
           value={selectedPlatform}
           onChange={this.handleChange}
         >
-          <option value="Netflix">Netflix</option>
-          <option value="Amazon Prime">Amazon Prime</option>
-          <option value="Disney+">Disney+</option>
-          <option value="HBO Now">HBO Now</option>
-          <option value="Plex">Plex</option>
-          <option value="Other">Other</option>
+
+        {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
+        {availablePlatforms.map(eachPlatform => {
+            return <option value={eachPlatform}>{eachPlatform}</option>;
+          })}
+
         </select>
 
         <button
