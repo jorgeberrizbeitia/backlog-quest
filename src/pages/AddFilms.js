@@ -31,7 +31,6 @@ export class AddFilms extends Component {
       url: `https://api.themoviedb.org/3/search/${apiMediaType}?api_key=${process.env.REACT_APP_CLIENT_KEY}&query=${searchQuery}&page=1`
     })
       .then(data => {
-        console.log(data.data.results);
         this.setState({ searchResults: data.data.results });
       })
       .catch(err => console.log(err));
@@ -39,7 +38,7 @@ export class AddFilms extends Component {
 
   selectMediaType = event => {
     const { name } = event.target;
-    this.setState({ searchResults: [], searchType: name });
+    this.setState({ searchResults: [], searchType: name, searchQuery: "" });
   };
 
   render() {

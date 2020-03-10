@@ -12,18 +12,19 @@ export class AddFilmInfo extends Component {
   handleChange = event => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
-    console.log(value)
+    console.log(value);
   };
 
   addResult = (event, media, ImageUrl) => {
     event.preventDefault();
     if (this.state.selectedMediaType === "Film") {
       // API FOR FILMS
+      console.log("media date", media.release_date)
       const { title, vote_average, overview, release_date } = media;
       // THIS SHOULD GO TO BACKEND API SERVICES
       axios
         .post(
-          "http://localhost:5000/api/add",
+          `${process.env.REACT_APP_API_URL}/api/add`,
           {
             title, // Different name for series
             type: this.state.selectedMediaType,
@@ -44,7 +45,7 @@ export class AddFilmInfo extends Component {
       // THIS SHOULD GO TO BACKEND API SERVICES
       axios
         .post(
-          "http://localhost:5000/api/add",
+          `${process.env.REACT_APP_API_URL}/api/add`,
           {
             title: name,
             type: this.state.selectedMediaType,
@@ -75,16 +76,15 @@ export class AddFilmInfo extends Component {
         <select
           id={selectedResult.title}
           name="selectedPlatform"
-          placeholder="Select platform"
           value={selectedPlatform}
           onChange={this.handleChange}
         >
-
-        {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
-        {availablePlatforms.map(eachPlatform => {
+          {/* below is a placeholder for dropdown */}
+          <option value="" disabled selected>Select your option</option>
+          {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
+          {availablePlatforms.map(eachPlatform => {
             return <option value={eachPlatform}>{eachPlatform}</option>;
           })}
-
         </select>
 
         <button

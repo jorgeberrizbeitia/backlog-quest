@@ -3,36 +3,111 @@ import axios from "axios";
 
 export class BacklogFilmInfo extends Component {
   state = {
-    eachMedia: this.props.eachMediaProp, // passed from Backlog props
-    availablePlatforms: this.props.userProp.platforms, // passed from withAuth HOC through Backlog
-    selectedPlatform: ""
+    selectedPlatform: "",
+    toogleInfo: false
   };
 
-  handleChange = event =>  {
+  handleChange = event => {
     const { id, value } = event.target;
-    this.props.updatePlatformProp(id, value)
-    this.setState({ "eachMedia.platform": value })
-    
+    this.props.updatePlatformProp(id, value);
+  };
+
+  showAdditionalInfo = () => {
+    let newToggleInfo;
+    this.state.toogleInfo === false
+      ? (newToggleInfo = true)
+      : (newToggleInfo = false);
+    this.setState({ toogleInfo: newToggleInfo });
   };
 
   render() {
-    const { eachMedia, availablePlatforms } = this.state;
+    // DECOINSTRUCT ALL PROPS HERE
     return (
       <div>
-        <select
-          id={eachMedia._id}
-          onChange={this.handleChange}
-          name="platforms"
-          // THIS NEEDS TO BE FIXED. SHOWING PREVIOUS SELECTED ITEM IN VALUE ON MEDIA UPDATE
-          value={eachMedia.platform}
+        <button
+          class="list-group-item list-group-item-action list-items"
+          onClick={this.showAdditionalInfo}
         >
-        {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
-          {availablePlatforms.map(eachPlatform => {
-            return <option value={eachPlatform}>{eachPlatform}</option>;
-          })}
+          {/* Magnificent ternary to add icon depending on media type */}
+          {this.props.eachMediaProp.type === "Series" ? (
+            <i class="fas fa-tv"></i>
+          ) : this.props.eachMediaProp.type === "Film" ? (
+            <i class="fas fa-film"></i>
+          ) : this.props.eachMediaProp.type === "Game" ? (
+            <i class="fas fa-gamepad"></i>
+          ) : null}
+          <b> {this.props.eachMediaProp.title}</b> in{" "}
+          <b>{this.props.eachMediaProp.platform}</b>
+        </button>
+        <br />
 
-        </select>
-        <button onClick={ () => this.props.deleteMediaProp(eachMedia._id) }>delete</button>
+        {/* TERNARY OPERATOR SHOULD SHOW THE DIV AS AN ADITIONAL COMPONENT */}
+        {this.state.toogleInfo ? (
+          <div>
+            <div class="card mb-3 cardReact">
+              <div class="no-gutters infoblocks">
+                <div class="col-md-4">
+                  <img
+                    src={this.props.eachMediaProp.image}
+                    class="card-img"
+                    alt="..."
+                  />
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <p class="card-text">
+                      <small class="text-muted">
+                        <b>Release Date:</b>{" "}
+                        {this.props.eachMediaProp.releaseDate}
+                      </small>{" "}
+                      <br />
+                      <small class="text-muted">
+                        <b>Description:</b>{" "}
+                        {this.props.eachMediaProp.description}
+                      </small>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <label>Update Platform</label>
+              <select
+                id={this.props.eachMediaProp._id}
+                onChange={this.handleChange}
+                name="platforms"
+                value={this.props.eachMediaProp.platform}
+              >
+                {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
+                {this.props.userProp.platforms.map(eachPlatform => {
+                  return <option value={eachPlatform}>{eachPlatform}</option>;
+                })}
+              </select>
+
+              <button
+                type="button"
+                class="btn btn-outline-danger info-btns"
+                onClick={() =>
+                  this.props.deleteMediaProp(this.props.eachMediaProp._id)
+                }
+              >
+                delete
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-success info-btns"
+                onClick={() =>
+                  this.props.toggleDoneProp(
+                    this.props.eachMediaProp._id,
+                    this.props.eachMediaProp.done
+                  )
+                }
+              >
+                done
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }

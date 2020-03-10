@@ -35,7 +35,6 @@ class Signup extends Component {
     }
 
     this.setState({ platforms: newPlatforms });
-    console.log(this.state.platforms);
   };
 
   render() {
@@ -68,8 +67,13 @@ class Signup extends Component {
           <button onClick={this.togglePlatform} name="Plex">Plex</button>
           <button onClick={this.togglePlatform} name="Other">Other</button>
 
+          <h5>Selected Platforms: </h5>
           <ul>
-            <p>{this.state.platforms}</p>
+          {
+            this.state.platforms.map(eachPlatformn => {
+              return <li>{eachPlatformn}</li>
+            })
+            }
           </ul>
 
           <input type="submit" value="Signup" />

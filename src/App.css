@@ -3,24 +3,34 @@ html, body {
   padding: 0;
 }
 
-.App {
-  padding: 20px;;
+.list-items {
+  font-size: small;
+  margin: 0;
 }
 
-nav.navbar { 
+.footerbar {
+  position: fixed;
+  bottom: 0; 
+  width: 90%;
+}
+
+.btn-circle.btn-xl { 
+  width: 70px; 
+  height: 70px; 
+  padding: 10px 16px; 
+  border-radius: 35px; 
+  font-size: 12px; 
+  text-align: center; 
+} 
+
+.list-group {
+  margin-bottom: 80px; 
+}
+
+.infoblocks {
   display: flex;
-  padding: 0px 20px;
-  background: #686de0; 
 }
 
-button.navbar-button {
-  padding: 5px 20px;
-  width: 100px;
-  margin: 15px 10px;
-  border-radius: 3px;
-}
-
-#home-btn {
-  color: white;
-  text-decoration: none;
+.info-btns {
+  margin: 5px;
 }

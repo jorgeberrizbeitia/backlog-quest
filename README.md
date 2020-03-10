@@ -183,10 +183,10 @@ The url to your repository and to your deployed project
 
 [Server repository Link](https://github.com/jorgeberrizbeitia/backlog-quest-server)
 
-[Deployed App Link]()
+[Deployed App Link](https://backlog-quest.herokuapp.com/login)
 
 ### Slides
 
 The url to your presentation slides
 
-[Slides Link]()
+[Slides Link](https://docs.google.com/presentation/d/1zndKZ8DC-_i391alptPKsAKanCSXTrLVL39L3xtEjz8/edit?usp=sharing)

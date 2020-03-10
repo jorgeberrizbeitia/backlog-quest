@@ -9,21 +9,30 @@ class Backlog extends Component {
     media: [],
     filteredMedia: [], // media state mutated through filter by media type
     randomClick: false,
-    previousFilteredMedia: [] // previous state for use in random button toggle off
+    previousFilteredMedia: [], // previous state for use in random button toggle off
+    isLoading: true,
+    filteredType: "Film", // set as film on the first load
   };
 
   // to get updated data from backend
   getAllBacklog = () => {
     // THIS SHOULD GO TO BACKEND SERVICES
     axios
-      .get(`http://localhost:5000/api/backlog`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_API_URL}/api/backlog`, 
+      
+      {
+        withCredentials: true
+      })
       .then(apiResponse => {
-        let firstFilteredArray = apiResponse.data.filter(e => e.type === "Film"); // To show only films on first backlog load
+        let firstFilteredArray = apiResponse.data.filter(
+          e => e.type === this.state.filteredType
+        ); // To show only films on first backlog load
         this.setState({
           media: apiResponse.data,
           filteredMedia: firstFilteredArray,
           previousFilteredMedia: firstFilteredArray,
-          randomClick: false
+          randomClick: false,
+          isLoading: false
         });
       });
   };
@@ -35,7 +44,8 @@ class Backlog extends Component {
     this.setState({
       filteredMedia: newState,
       previousFilteredMedia: newState,
-      randomClick: false
+      randomClick: false,
+      filteredType: event.target.name
     });
   };
 
@@ -63,7 +73,7 @@ class Backlog extends Component {
     // THIS SHOULD GO TO BACKEND SERVICES
     axios
       .put(
-        `http://localhost:5000/api/media/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/media/${id}`,
         {
           platform: value
         },
@@ -79,7 +89,7 @@ class Backlog extends Component {
   deleteMedia = mediaId => {
     // THIS SHOULD GO TO BACKEND SERVICES
     axios
-      .delete(`http://localhost:5000/api/media/${mediaId}`, {
+      .delete(`${process.env.REACT_APP_API_URL}/api/media/${mediaId}`, {
         withCredentials: true
       })
       .then(() => this.getAllBacklog())
@@ -91,42 +101,76 @@ class Backlog extends Component {
     this.getAllBacklog();
   }
 
+  toggleDone = (id, isItDone) => {
+    // THIS SHOULD GO TO BACKEND SERVICES
+    let done;
+    isItDone ? (done = false) : (done = true);
+    axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/api/media/${id}`,
+        {
+          done
+        },
+        {
+          withCredentials: true
+        }
+      )
+      .then(() => {
+        this.getAllBacklog();
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
-    const { filteredMedia } = this.state;
+    const { filteredMedia, isLoading } = this.state;
+
     return (
       <div>
-        <div>
-          <button onClick={this.filterMedia} name="Series">
-            Series
+        <nav class="navbar navbar-light bg-light">
+
+          <button type="button" class="btn btn-info" onClick={this.filterMedia} name="Series">
+          <i class="fas fa-tv"></i> Series
           </button>
-          <button onClick={this.filterMedia} name="Film">
-            Films
+
+          <button type="button" class="btn btn-info" onClick={this.filterMedia} name="Film">
+          <i class="fas fa-film"></i> Films
           </button>
-        </div>
+
+          <button type="button" class="btn btn-info" onClick={this.filterMedia} name="Game">
+          <i class="fas fa-gamepad"></i> Games
+          </button>
+
+        </nav>
         <h1>Backlog</h1>
-        <ul>
-          {filteredMedia.map(eachMedia => {
-            return (
-              <li>
-                <b>{eachMedia.title}</b> in <b>{eachMedia.platform}</b>
-                <button onClick={this.showInfo}></button>
-                <BacklogFilmInfo
-                  eachMediaProp={eachMedia}
-                  userProp={this.props.user}
-                  updatePlatformProp={this.updatePlatform}
-                  deleteMediaProp={this.deleteMedia}
-                />
-              </li>
-            );
-          })}
-        </ul>
-        <Link to={"/add/films"}>
-          <p>Add</p>
+        <div class="list-group">
+          {!isLoading
+            ? filteredMedia.map(eachMedia => {
+                return (
+                    <BacklogFilmInfo
+                      eachMediaProp={eachMedia}
+                      userProp={this.props.user}
+                      updatePlatformProp={this.updatePlatform}
+                      deleteMediaProp={this.deleteMedia}
+                      toggleDoneProp={this.toggleDone}
+                    />
+                );
+              })
+            : null}
+        </div>
+
+        <nav class="navbar navbar-light bg-light footerbar">
+        <Link class="btn btn-outline-info" type="button" to={"/add/films"}>
+        <i class="fas fa-plus"></i>
         </Link>
-        <button onClick={this.randomMedia}>Random</button>
-        <Link to={"/profile"}>
-          <p>Profile</p>
+        <button class="btn btn-info btn-circle btn-xl">
+
+        <i onClick={this.randomMedia} class="fas fa-random icon"></i>
+        </button>
+
+        <Link class="btn btn-outline-info" type="button" to={"/profile"}>
+        <i class="fas fa-user"></i>
         </Link>
+        </nav>
       </div>
     );
   }

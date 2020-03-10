@@ -7,25 +7,37 @@ class Navbar extends Component {
     const { user, logout, isLoggedIn } = this.props;
 
     return (
-      <nav className="navbar">
-        <Link to={"/"} id="home-btn">
-          <h4>Home</h4>
+      <nav class="navbar navbar-light bg-light">
+        <Link to={"/"} class="btn btn-outline-info" type="button">
+        <i class="fas fa-home"></i>
         </Link>
         {isLoggedIn ? (
           <>
-            <p>username: {user.username}</p>
-            <button onClick={logout}>Logout</button>
+            {/* <p id="home-btn">Welcome {user.username} </p> */}
+            <Link
+             class="btn btn-outline-info" type="button"
+              to={"/backlog"}
+            >
+              <i class="fas fa-list"></i>
+            </Link>
+            <Link
+              class="btn btn-outline-info" type="button"
+              to={"/done"}
+            >
+              <i class="fas fa-tasks"></i>
+            </Link>
+            <i class="fas fa-sign-out-alt btn btn-outline-danger" type="button" onClick={logout}></i>
           </>
         ) : (
           <>
-            <Link to="/login">
+            <Link to="/login" class="btn btn-outline-success" type="button">
               {" "}
-              <button className="navbar-button">Login</button>{" "}
+              <i class="fas fa-sign-in-alt"></i>
             </Link>
             <br />
-            <Link to="/signup">
+            <Link to="/signup" class="btn btn-outline-info" type="button">
               {" "}
-              <button className="navbar-button">Sign Up</button>{" "}
+              <i class="fas fa-user-plus"></i>
             </Link>
           </>
         )}
