@@ -8,9 +8,9 @@ class Auth {
     });
   }
 
-  signup({ username, password, platforms }) {
+  signup({ username, password, platforms, consoles }) {
     return this.auth
-      .post("/auth/signup", { username, password, platforms })
+      .post("/auth/signup", { username, password, platforms, consoles })
       .then(({ data }) => data);
     // .then((response) => response.data);
   }

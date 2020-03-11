@@ -6,7 +6,7 @@ export class AddFilmInfo extends Component {
     selectedResult: this.props.selectedResultProp,
     selectedPlatform: "",
     selectedMediaType: this.props.searchTypeProp,
-    availablePlatforms: this.props.userPlatformsProp // passed from withAuth HOC through Backlog
+    availablePlatforms: this.props.userPlatformsProp 
   };
 
   handleChange = event => {
@@ -19,7 +19,6 @@ export class AddFilmInfo extends Component {
     event.preventDefault();
     if (this.state.selectedMediaType === "Film") {
       // API FOR FILMS
-      console.log("media date", media.release_date)
       const { title, vote_average, overview, release_date } = media;
       // THIS SHOULD GO TO BACKEND API SERVICES
       axios

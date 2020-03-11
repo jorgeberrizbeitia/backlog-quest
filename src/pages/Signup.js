@@ -22,9 +22,9 @@ class Signup extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    const { username, password, selectedPlatforms } = this.state;
+    const { username, password, selectedPlatforms, selectedConsoles } = this.state;
 
-    this.props.signup(username, password, selectedPlatforms);
+    this.props.signup(username, password, selectedPlatforms, selectedConsoles);
   };
 
   handleChange = event => {

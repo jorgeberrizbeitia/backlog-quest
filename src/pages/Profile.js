@@ -31,7 +31,8 @@ class Profile extends Component {
       .put(
         `${process.env.REACT_APP_API_URL}/profile/${this.props.user._id}`,
         {
-          platforms: selectedPlatforms
+          platforms: selectedPlatforms,
+          consoles: selectedConsoles
         },
         {
           withCredentials: true
@@ -83,8 +84,8 @@ class Profile extends Component {
       .then(apiResponse => {
         this.setState({
           username: apiResponse.data.username,
-          selectedPlatforms: apiResponse.data.platforms
-          // MISSING CONSOLES
+          selectedPlatforms: apiResponse.data.platforms,
+          selectedConsoles: apiResponse.data.consoles
         });
       });
   };
