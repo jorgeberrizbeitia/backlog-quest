@@ -24,23 +24,33 @@ class Login extends Component {
         <h1>Login</h1>
 
         <form onSubmit={this.handleFormSubmit}>
-          <label>Username:</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={this.handleChange}
-          />
+          <div class="form-group">
+            <label>Username:</label>
+            <input
+              class="form-control"
+              type="text"
+              name="username"
+              value={username}
+              onChange={this.handleChange}
+              placeholder="Your name here"
+            />
+          </div>
 
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={this.handleChange}
-          />
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password:</label>
+            <input
+              class="form-control"
+              type="password"
+              name="password"
+              value={password}
+              onChange={this.handleChange}
+              placeholder="And your password here"
+            />
+          </div>
+<div class="sign-btn">
 
-          <input type="submit" value="Login" />
+          <input class="btn btn-primary" type="submit" value="Login" />
+</div>
         </form>
       </div>
     );

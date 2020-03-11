@@ -6,7 +6,7 @@ export class AddFilmInfo extends Component {
     selectedResult: this.props.selectedResultProp,
     selectedPlatform: "",
     selectedMediaType: this.props.searchTypeProp,
-    availablePlatforms: this.props.userProp.platforms // passed from withAuth HOC through Backlog
+    availablePlatforms: this.props.userPlatformsProp // passed from withAuth HOC through Backlog
   };
 
   handleChange = event => {
@@ -69,7 +69,7 @@ export class AddFilmInfo extends Component {
       "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" +
       selectedResult.poster_path;
     return (
-      <li>
+      <div class="col-3">
         {selectedResult.title}
         <img src={ImageUrl} alt="poster"></img>
 
@@ -87,12 +87,12 @@ export class AddFilmInfo extends Component {
           })}
         </select>
 
-        <button
+        <button class="btn btn-info"
           onClick={event => this.addResult(event, selectedResult, ImageUrl)}
         >
           Add to Backlog
         </button>
-      </li>
+      </div>
     );
   }
 }

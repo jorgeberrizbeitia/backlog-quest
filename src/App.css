@@ -34,3 +34,27 @@ html, body {
 .info-btns {
   margin: 5px;
 }
+
+.platform-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.signup-platforms {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.sign-btn {
+  display:flex;
+  justify-content: center;
+}
+
+.platforms-list {
+  width: 45%;
+}
+
+.signup-form p {
+  justify-content: center;
+}

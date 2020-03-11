@@ -6,15 +6,25 @@ class Signup extends Component {
   state = {
     username: "",
     password: "",
-    email: "",
-    platforms: []
+    email: "", // not used atm
+    allPlatforms: [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+",
+      "HBO Now",
+      "Plex",
+      "Other"
+    ],
+    selectedPlatforms: [],
+    allConsoles: ["Xbox", "Playstation", "Switch", "PC", "Other"],
+    selectedConsoles: []
   };
 
   handleFormSubmit = event => {
     event.preventDefault();
-    const { username, password, platforms } = this.state;
+    const { username, password, selectedPlatforms } = this.state;
 
-    this.props.signup(username, password, platforms);
+    this.props.signup(username, password, selectedPlatforms);
   };
 
   handleChange = event => {
@@ -25,62 +35,123 @@ class Signup extends Component {
   togglePlatform = event => {
     event.preventDefault();
 
-    const { name } = event.target;
-    let newPlatforms = this.state.platforms;
+    const { name, id } = event.target;
+    let newPlatforms = this.state.selectedPlatforms;
+    let newConsoles = this.state.selectedConsoles;
 
-    if (newPlatforms.includes(name)) {
-      newPlatforms.splice(newPlatforms.indexOf(name), 1);
-    } else {
-      newPlatforms.push(name);
+    if (id === "platforms") {
+      if (newPlatforms.includes(name)) {
+        newPlatforms.splice(newPlatforms.indexOf(name), 1);
+      } else {
+        newPlatforms.push(name);
+      }
+      this.setState({ selectedPlatforms: newPlatforms });
+    } else if (id === "consoles") {
+      if (newConsoles.includes(name)) {
+        newConsoles.splice(newConsoles.indexOf(name), 1);
+      } else {
+        newConsoles.push(name);
+      }
+      this.setState({ selectedConsoles: newConsoles });
     }
-
-    this.setState({ platforms: newPlatforms });
   };
 
   render() {
-    const { username, password } = this.state;
+    const {
+      username,
+      password,
+      allPlatforms,
+      selectedPlatforms,
+      allConsoles,
+      selectedConsoles
+    } = this.state;
     return (
       <div>
         <h1>Sign Up</h1>
 
         <form onSubmit={this.handleFormSubmit}>
-          <label>Username:</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={this.handleChange}
-          />
+          <div class="form-group">
+            <label>Username:</label>
+            <input
+              class="form-control"
+              type="text"
+              name="username"
+              value={username}
+              onChange={this.handleChange}
+              placeholder="Your name here"
+            />
+          </div>
+          <div class="form-group">
+            <label>Password:</label>
+            <input
+              class="form-control"
+              type="password"
+              name="password"
+              value={password}
+              onChange={this.handleChange}
+              placeholder="And your password here"
+            />
+          </div>
 
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={this.handleChange}
-          />
-          <br/>
-          <button onClick={this.togglePlatform} name="Netflix">Netflix</button>
-          <button onClick={this.togglePlatform} name="Amazon Prime">Amazon Prime</button>
-          <button onClick={this.togglePlatform} name="Disney+">Disney+</button>
-          <button onClick={this.togglePlatform} name="HBO Now">HBO Now</button>
-          <button onClick={this.togglePlatform} name="Plex">Plex</button>
-          <button onClick={this.togglePlatform} name="Other">Other</button>
+          <p>Select your owned subscriptions and consoles below!</p>
 
-          <h5>Selected Platforms: </h5>
-          <ul>
-          {
-            this.state.platforms.map(eachPlatformn => {
-              return <li>{eachPlatformn}</li>
-            })
-            }
-          </ul>
+          {/* Here you can observe magic happening by mapping on arrays and hard-coding style based on .includes */}
 
-          <input type="submit" value="Signup" />
+          <div class="platform-container">
+            <div class="btn-group-vertical platforms-list">
+              {allPlatforms.map(eachPlatform => {
+                return (
+                  <button
+                    id="platforms"
+                    style={
+                      selectedPlatforms.includes(eachPlatform)
+                        ? { background: "green" }
+                        : null
+                    }
+                    class="btn btn-secondary"
+                    onClick={this.togglePlatform}
+                    name={eachPlatform}
+                  >
+                    {eachPlatform}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div class="btn-group-vertical platforms-list">
+              {allConsoles.map(eachConsole => {
+                return (
+                  <button
+                    id="consoles"
+                    style={
+                      selectedConsoles.includes(eachConsole)
+                        ? { background: "green" }
+                        : null
+                    }
+                    class="btn btn-secondary"
+                    onClick={this.togglePlatform}
+                    name={eachConsole}
+                  >
+                    {eachConsole}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <p>Don't worry, you will be able to edit this later</p>
+
+          {/* <label>Selected Platforms: </label>
+            <ul>
+              {this.state.selectedPlatforms.map(eachPlatform => {
+                return <li>{eachPlatform}</li>;
+              })}
+            </ul> */}
+
+          <div class="sign-btn">
+            <input class="btn btn-primary" type="submit" value="Signup" />
+          </div>
         </form>
-
-        <p>Already have account?</p>
-        <Link to={"/login"}> Login</Link>
       </div>
     );
   }

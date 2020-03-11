@@ -12,6 +12,7 @@ class Backlog extends Component {
     previousFilteredMedia: [], // previous state for use in random button toggle off
     isLoading: true,
     filteredType: "Film", // set as film on the first load
+    userPlatforms: []
   };
 
   // to get updated data from backend
@@ -99,6 +100,23 @@ class Backlog extends Component {
   componentDidMount() {
     //  fetch the data from API befor initial render
     this.getAllBacklog();
+
+    // THIS SHOULD GO TO BACKEND SERVICES USED ALSO ON PROFILE AND ADDFILM
+    axios
+    .get(
+      `${process.env.REACT_APP_API_URL}/profile/${this.props.user._id}`,
+
+      {
+        withCredentials: true
+      }
+    )
+    .then(apiResponse => {
+      this.setState({
+        userPlatforms: apiResponse.data.platforms
+        // MISSING CONSOLES
+      });
+    });
+
   }
 
   toggleDone = (id, isItDone) => {
@@ -122,7 +140,7 @@ class Backlog extends Component {
   };
 
   render() {
-    const { filteredMedia, isLoading } = this.state;
+    const { filteredMedia, isLoading, userPlatforms } = this.state;
 
     return (
       <div>
@@ -148,7 +166,7 @@ class Backlog extends Component {
                 return (
                     <BacklogFilmInfo
                       eachMediaProp={eachMedia}
-                      userProp={this.props.user}
+                      userPlatformsProp={userPlatforms}
                       updatePlatformProp={this.updatePlatform}
                       deleteMediaProp={this.deleteMedia}
                       toggleDoneProp={this.toggleDone}

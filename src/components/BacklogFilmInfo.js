@@ -70,18 +70,22 @@ export class BacklogFilmInfo extends Component {
                 </div>
               </div>
 
-              <label>Update Platform</label>
+              <form class="form-group">
+              <label>Click below to update platform!</label>
+
               <select
+                class="form-control"
                 id={this.props.eachMediaProp._id}
                 onChange={this.handleChange}
                 name="platforms"
                 value={this.props.eachMediaProp.platform}
               >
                 {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
-                {this.props.userProp.platforms.map(eachPlatform => {
+                {this.props.userPlatformsProp.map(eachPlatform => {
                   return <option value={eachPlatform}>{eachPlatform}</option>;
                 })}
               </select>
+              </form>
 
               <button
                 type="button"
