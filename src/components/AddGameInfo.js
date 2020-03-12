@@ -21,7 +21,6 @@ export class AddGameInfo extends Component {
 
     // switch case to fix platform field format because this API is SspECiaL ¬¬
     let platformCorrected = "";
-
     switch (this.state.selectedResult.platform) {
       case "Switch":
         platformCorrected = "switch";
@@ -74,6 +73,8 @@ export class AddGameInfo extends Component {
       case "Xbox":
         platformCorrected = "xbox";
         break;
+      default:
+        platformCorrected = "";
     }
 
     axios({
@@ -82,20 +83,21 @@ export class AddGameInfo extends Component {
       headers: {
         "content-type": "application/octet-stream",
         "x-rapidapi-host": "chicken-coop.p.rapidapi.com",
-        "x-rapidapi-key": "ebde97877cmsh57d04785db64b6cp1c30f0jsn986c5e407a9c"
+        "x-rapidapi-key": process.env.REACT_APP_GAMES_CLIENT_KEY
       },
       params: {
         platform: `${platformCorrected}`
       }
     })
       .then(data => {
+        // below is to change the str date from api to Date format
+        let releasedDate = new Date (data.data.result.releaseDate)
         // THIS SHOULD GO TO BACKEND API SERVICES
         const {
           title,
           image,
           score,
           description,
-          releasedDate
         } = data.data.result;
         axios
           .post(
@@ -103,12 +105,12 @@ export class AddGameInfo extends Component {
             {
               title,
               type: this.state.selectedMediaType,
-              // done: false,
-              platform: this.state.selectedConsole
-              // image,
-              // ranking: score,
-              // description
-              // releaseDate: releasedDate
+              done: false,
+              platform: this.state.selectedConsole,
+              image,
+              ranking: score,
+              description,
+              releaseDate: releasedDate
             },
             { withCredentials: true }
           )
@@ -121,31 +123,37 @@ export class AddGameInfo extends Component {
   render() {
     const { selectedResult, selectedConsole, availableConsoles } = this.state;
     return (
-      <div class="col-3">
-        {selectedResult.title}
+      <div class="card">
+        <div class="card-body">
+          <h7>{selectedResult.title} on {selectedResult.platform}</h7>
 
-        <select
-          id={selectedResult.title}
-          name="selectedConsole"
-          value={selectedConsole}
-          onChange={this.handleChange}
-        >
-          {/* below is a placeholder for dropdown */}
-          <option value="" disabled selected>
-            Select your option
-          </option>
-          {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
-          {availableConsoles.map(eachConsole => {
-            return <option value={eachConsole}>{eachConsole}</option>;
-          })}
-        </select>
+          <div add-info-container>
 
-        <button
-          class="btn btn-info"
-          onClick={event => this.addResult(event, selectedResult)}
-        >
-          Add to Backlog
-        </button>
+              <select
+                class="btn btn-outline-info platforms-list"
+                id={selectedResult.title}
+                name="selectedConsole"
+                value={selectedConsole}
+                onChange={this.handleChange}
+              >
+                {/* below is a placeholder for dropdown */}
+                <option value="" disabled selected>
+                  Select!
+                </option>
+                {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
+                {availableConsoles.map(eachConsole => {
+                  return <option value={eachConsole}>{eachConsole}</option>;
+                })}
+              </select>
+
+              <button
+                class="btn btn-info"
+                onClick={event => this.addResult(event, selectedResult)}
+              >
+                Add to Backlog
+              </button>
+          </div>
+        </div>
       </div>
     );
   }

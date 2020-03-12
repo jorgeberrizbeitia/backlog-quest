@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-export class AddFilmInfo extends Component {
+export class AddVideoInfo extends Component {
   state = {
     selectedResult: this.props.selectedResultProp,
     selectedPlatform: "",
     selectedMediaType: this.props.searchTypeProp,
-    availablePlatforms: this.props.userPlatformsProp 
+    availablePlatforms: this.props.userPlatformsProp
   };
 
   handleChange = event => {
@@ -68,32 +68,56 @@ export class AddFilmInfo extends Component {
       "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" +
       selectedResult.poster_path;
     return (
-      <div class="col-3">
-        {selectedResult.title}
-        <img src={ImageUrl} alt="poster"></img>
+      <div class="card">
+        <div class="add-info-container">
+          <div>
+            <img class="card-img-top" src={ImageUrl} alt="poster" />
+          </div>
 
-        <select
-          id={selectedResult.title}
-          name="selectedPlatform"
-          value={selectedPlatform}
-          onChange={this.handleChange}
-        >
-          {/* below is a placeholder for dropdown */}
-          <option value="" disabled selected>Select your option</option>
-          {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
-          {availablePlatforms.map(eachPlatform => {
-            return <option value={eachPlatform}>{eachPlatform}</option>;
-          })}
-        </select>
+          <div class="card-body">
+            <p class="card-text">
+              <b>title:</b>{" "}
+              {selectedResult.title
+                ? selectedResult.title
+                : selectedResult.name}
+                <br />
+              <b>Rating:</b> {selectedResult.vote_average}
+              <br />
+              <b>Release Date:</b>{" "}
+              {selectedResult.first_air_date
+                ? selectedResult.first_air_date
+                : selectedResult.release_date}
+            </p>
+          </div>
+        </div>
 
-        <button class="btn btn-info"
-          onClick={event => this.addResult(event, selectedResult, ImageUrl)}
-        >
-          Add to Backlog
-        </button>
+        <div class="card-body">
+          <select
+            id={selectedResult.title}
+            name="selectedPlatform"
+            value={selectedPlatform}
+            onChange={this.handleChange}
+          >
+            {/* below is a placeholder for dropdown */}
+            <option value="" disabled selected>
+              Select your option
+            </option>
+            {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
+            {availablePlatforms.map(eachPlatform => {
+              return <option value={eachPlatform}>{eachPlatform}</option>;
+            })}
+          </select>
+
+          <button
+            class="btn btn-info"
+            onClick={event => this.addResult(event, selectedResult, ImageUrl)}
+          >
+            Add to Backlog
+          </button>
+        </div>
       </div>
     );
   }
 }
 
-export default AddFilmInfo;
+export default AddVideoInfo;

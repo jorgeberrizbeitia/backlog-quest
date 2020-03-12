@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withAuth } from "../lib/Auth";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import BacklogFilmInfo from "../components/BacklogFilmInfo";
+import BacklogMediaInfo from "../components/BacklogMediaInfo";
 
 class Backlog extends Component {
   state = {
@@ -11,19 +11,22 @@ class Backlog extends Component {
     randomClick: false,
     previousFilteredMedia: [], // previous state for use in random button toggle off
     isLoading: true,
-    filteredType: "Film", // set as film on the first load
-    userPlatforms: []
+    filteredType: "", // set as none on the first load
+    userPlatforms: [],
+    userConsoles: []
   };
 
   // to get updated data from backend
   getAllBacklog = () => {
     // THIS SHOULD GO TO BACKEND SERVICES
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/backlog`, 
-      
-      {
-        withCredentials: true
-      })
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/backlog`,
+
+        {
+          withCredentials: true
+        }
+      )
       .then(apiResponse => {
         let firstFilteredArray = apiResponse.data.filter(
           e => e.type === this.state.filteredType
@@ -103,20 +106,19 @@ class Backlog extends Component {
 
     // THIS SHOULD GO TO BACKEND SERVICES USED ALSO ON PROFILE AND ADDFILM
     axios
-    .get(
-      `${process.env.REACT_APP_API_URL}/profile/${this.props.user._id}`,
+      .get(
+        `${process.env.REACT_APP_API_URL}/profile/${this.props.user._id}`,
 
-      {
-        withCredentials: true
-      }
-    )
-    .then(apiResponse => {
-      this.setState({
-        userPlatforms: apiResponse.data.platforms
-        // MISSING CONSOLES
+        {
+          withCredentials: true
+        }
+      )
+      .then(apiResponse => {
+        this.setState({
+          userPlatforms: apiResponse.data.platforms,
+          userConsoles: apiResponse.data.consoles
+        });
       });
-    });
-
   }
 
   toggleDone = (id, isItDone) => {
@@ -140,54 +142,78 @@ class Backlog extends Component {
   };
 
   render() {
-    const { filteredMedia, isLoading, userPlatforms } = this.state;
+    const {
+      filteredMedia,
+      isLoading,
+      userPlatforms,
+      userConsoles
+    } = this.state;
 
     return (
       <div>
         <nav class="navbar navbar-light bg-light">
-
-          <button type="button" class="btn btn-info" onClick={this.filterMedia} name="Series">
-          <i class="fas fa-tv"></i> Series
+          <button
+            type="button"
+            class="btn btn-info"
+            onClick={this.filterMedia}
+            name="Series"
+          >
+            <i class="fas fa-tv"></i> Series
           </button>
 
-          <button type="button" class="btn btn-info" onClick={this.filterMedia} name="Film">
-          <i class="fas fa-film"></i> Films
+          <button
+            type="button"
+            class="btn btn-info"
+            onClick={this.filterMedia}
+            name="Film"
+          >
+            <i class="fas fa-film"></i> Films
           </button>
 
-          <button type="button" class="btn btn-info" onClick={this.filterMedia} name="Game">
-          <i class="fas fa-gamepad"></i> Games
+          <button
+            type="button"
+            class="btn btn-info"
+            onClick={this.filterMedia}
+            name="Game"
+          >
+            <i class="fas fa-gamepad"></i> Games
           </button>
-
         </nav>
-        <h1>Backlog</h1>
+        <div class="alert alert-info" role="alert">
+          Backlog List
+        </div>
+
         <div class="list-group">
           {!isLoading
             ? filteredMedia.map(eachMedia => {
                 return (
-                    <BacklogFilmInfo
-                      eachMediaProp={eachMedia}
-                      userPlatformsProp={userPlatforms}
-                      updatePlatformProp={this.updatePlatform}
-                      deleteMediaProp={this.deleteMedia}
-                      toggleDoneProp={this.toggleDone}
-                    />
+                  < BacklogMediaInfo
+                    eachMediaProp={eachMedia}
+                    userPlatformsProp={userPlatforms}
+                    userConsolesProp={userConsoles}
+                    updatePlatformProp={this.updatePlatform}
+                    deleteMediaProp={this.deleteMedia}
+                    toggleDoneProp={this.toggleDone}
+                  />
                 );
               })
             : null}
         </div>
 
         <nav class="navbar navbar-light bg-light footerbar">
-        <Link class="btn btn-outline-info" type="button" to={"/add/films"}>
-        <i class="fas fa-plus"></i>
-        </Link>
-        <button class="btn btn-info btn-circle btn-xl">
+          <Link class="btn btn-outline-info" type="button" to={"/add/films"}>
+            <i class="fas fa-plus"></i>
+          </Link>
+          <button
+            onClick={this.randomMedia}
+            class="btn btn-info btn-circle btn-xl"
+          >
+            <i class="fas fa-random icon"></i>
+          </button>
 
-        <i onClick={this.randomMedia} class="fas fa-random icon"></i>
-        </button>
-
-        <Link class="btn btn-outline-info" type="button" to={"/profile"}>
-        <i class="fas fa-user"></i>
-        </Link>
+          <Link class="btn btn-outline-info" type="button" to={"/profile"}>
+            <i class="fas fa-user"></i>
+          </Link>
         </nav>
       </div>
     );

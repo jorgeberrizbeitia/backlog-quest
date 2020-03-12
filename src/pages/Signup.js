@@ -103,12 +103,11 @@ class Signup extends Component {
                 return (
                   <button
                     id="platforms"
-                    style={
+                    class={
                       selectedPlatforms.includes(eachPlatform)
-                        ? { background: "green" }
-                        : null
+                        ? "btn btn-info"
+                        : "btn btn-secondary"
                     }
-                    class="btn btn-secondary"
                     onClick={this.togglePlatform}
                     name={eachPlatform}
                   >
@@ -123,12 +122,11 @@ class Signup extends Component {
                 return (
                   <button
                     id="consoles"
-                    style={
+                    class={
                       selectedConsoles.includes(eachConsole)
-                        ? { background: "green" }
-                        : null
+                        ? "btn btn-info"
+                        : "btn btn-secondary"
                     }
-                    class="btn btn-secondary"
                     onClick={this.togglePlatform}
                     name={eachConsole}
                   >

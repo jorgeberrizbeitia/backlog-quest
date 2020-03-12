@@ -58,3 +58,33 @@ html, body {
 .signup-form p {
   justify-content: center;
 }
+
+.search-input {
+  width: 77%;
+}
+
+.card-img-top {
+ width: 95%;
+}
+
+.add-info-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.platform-dropdown {
+  width: 50%;
+}
+
+h1, h2, h3, h4, h5 {
+  text-align: center;
+}
+
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 400px;
+}

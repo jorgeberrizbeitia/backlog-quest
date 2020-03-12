@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { withAuth } from "../lib/Auth";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import DoneMediaInfo from "../components/DoneMediaInfo";
+import BacklogMediaInfo from "../components/BacklogMediaInfo";
 
 class DoneList extends Component {
   state = {
     media: [],
     filteredMedia: [], // media state mutated through filter by media type
     isLoading: true,
-    filteredType: "Film" // set as film on the first load
+    filteredType: "" // set as none on the first load
   };
 
   // to get updated data from backend
@@ -84,31 +84,56 @@ class DoneList extends Component {
 
     return (
       <div>
-        <div>
-          <button onClick={this.filterMedia} name="Series">
-            Series
+        <nav class="navbar navbar-light bg-light">
+          <button
+            type="button"
+            class="btn btn-success"
+            onClick={this.filterMedia}
+            name="Series"
+          >
+            <i class="fas fa-tv"></i> Series
           </button>
-          <button onClick={this.filterMedia} name="Film">
-            Films
+
+          <button
+            type="button"
+            class="btn btn-success"
+            onClick={this.filterMedia}
+            name="Film"
+          >
+            <i class="fas fa-film"></i> Films
           </button>
+
+          <button
+            type="button"
+            class="btn btn-success"
+            onClick={this.filterMedia}
+            name="Game"
+          >
+            <i class="fas fa-gamepad"></i> Games
+          </button>
+        </nav>
+        <div class="alert alert-success" role="alert">
+          Done List
         </div>
-        <h1>Done List</h1>
-        <ul>
+
+        <div class="list-group">
           {!isLoading
             ? filteredMedia.map(eachMedia => {
                 return (
-                  <li>
-                    <DoneMediaInfo
-                      eachMediaProp={eachMedia}
-                      userProp={this.props.user}
-                      deleteMediaProp={this.deleteMedia}
-                      toggleDoneProp={this.toggleDone}
-                    />
-                  </li>
+                  <BacklogMediaInfo
+                    eachMediaProp={eachMedia}
+                    deleteMediaProp={this.deleteMedia}
+                    toggleDoneProp={this.toggleDone}
+                  />
                 );
               })
             : null}
-        </ul>
+        </div>
+        <nav class="navbar navbar-light bg-light footerbar">
+          <Link class="btn btn-success btn-circle" to={"/backlog"}>
+            <i class="fas fa-arrow-alt-circle-left"></i>
+          </Link>
+        </nav>
       </div>
     );
   }

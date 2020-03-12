@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { withAuth } from "../lib/Auth";
 import axios from "axios";
-import AddFilmInfo from "../components/AddFilmInfo";
+import AddVideoInfo from "../components/AddVideoInfo";
 import AddGameInfo from "../components/AddGameInfo";
 import { Link } from "react-router-dom";
 
 // import { HowLongToBeatService, HowLongToBeatEntry } from "howlongtobeat";
 // let hltbService = new HowLongToBeatService();
 
-export class AddFilms extends Component {
+export class AddMedia extends Component {
   state = {
     searchQuery: "",
     searchResults: [],
@@ -34,15 +34,18 @@ export class AddFilms extends Component {
       headers: {
         "content-type": "application/octet-stream",
         "x-rapidapi-host": "chicken-coop.p.rapidapi.com",
-        "x-rapidapi-key": "ebde97877cmsh57d04785db64b6cp1c30f0jsn986c5e407a9c" // NEED TO CHANGE THIS TO .ENV API KEY
+        "x-rapidapi-key": process.env.REACT_APP_GAMES_CLIENT_KEY // NEED TO CHANGE THIS TO .ENV API KEY
       },
       params: {
         title: `${searchQuery}`
       }
     })
       .then(data => {
-        console.log(data.data.result);
-        this.setState({ searchResults: data.data.result });
+        // to remove data without images because who needs those anyway
+        const newData = data.data.result.filter(
+          e => e.image !== null
+        );
+        this.setState({ searchResults: newData });
       })
       .catch(err => console.log(err));
 
@@ -61,10 +64,9 @@ export class AddFilms extends Component {
       url: `https://api.themoviedb.org/3/search/${apiMediaType}?api_key=${process.env.REACT_APP_CLIENT_KEY}&query=${searchQuery}&page=1`
     })
       .then(data => {
-        // to remove data without poster images because what are those anyway
-        console.log(data);
+        // to remove data without images because who wants those anyway
         const newData = data.data.results.filter(
-          e => e.poster_path !== undefined
+          e => e.poster_path !== null
         );
         this.setState({ searchResults: newData });
       })
@@ -137,21 +139,35 @@ export class AddFilms extends Component {
         </nav>
 
         {searchType === "" ? (
-          <h3>Select a media type!</h3>
+          <div class="alert alert-warning" role="alert">
+            <h3>Select a media type!</h3>
+          </div>
         ) : (
-          <form onSubmit={searchType === "Game" ? this.handleFormSubmitForGames : this.handleFormSubmit}>
+          <form
+            class="form-inline"
+            onSubmit={
+              searchType === "Game"
+                ? this.handleFormSubmitForGames
+                : this.handleFormSubmit
+            }
+          >
             <input
-              type="text"
+              class="form-control mr-sm-2 search-input"
+              type="search"
               name="searchQuery"
               value={searchQuery}
               onChange={this.handleChange}
               placeholder={searchType}
             />
-            <input type="submit" value="Search" />
+            <input
+              class="btn btn-outline-success my-2 my-sm-0"
+              type="submit"
+              value="Search"
+            />
           </form>
         )}
 
-        <div>
+        <div class="list-group">
           <div class="column flex-column flex-nowrap">
             {/* ternary on map to show different components based on if it is film/series or games */}
 
@@ -167,7 +183,7 @@ export class AddFilms extends Component {
                 })
               : searchResults.map(selectedResult => {
                   return (
-                    <AddFilmInfo
+                    <AddVideoInfo
                       selectedResultProp={selectedResult}
                       searchTypeProp={searchType}
                       userPlatformsProp={userPlatforms}
@@ -177,12 +193,14 @@ export class AddFilms extends Component {
           </div>
         </div>
 
-        <Link to={"/backlog"}>
-          <h4>Back</h4>
-        </Link>
+        <nav class="navbar navbar-light bg-light footerbar">
+          <Link class="btn btn-info btn-circle" to={"/backlog"}>
+            <i class="fas fa-arrow-alt-circle-left"></i>
+          </Link>
+        </nav>
       </div>
     );
   }
 }
 
-export default withAuth(AddFilms);
+export default withAuth(AddMedia);

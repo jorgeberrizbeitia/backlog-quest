@@ -21,7 +21,7 @@ class Navbar extends Component {
               <i class="fas fa-list"></i>
             </Link>
             <Link
-              class="btn btn-outline-info" type="button"
+              class="btn btn-outline-success" type="button"
               to={"/done"}
             >
               <i class="fas fa-tasks"></i>
