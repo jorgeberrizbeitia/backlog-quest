@@ -18,7 +18,8 @@ class Auth {
   login({ username, password }) {
     return this.auth
       .post("/auth/login", { username, password })
-      .then(({ data }) => data);
+      .then(({ data }) => data)
+      //.catch(err => console.log("username taken"))
     // .then((response) => response.data);
   }
 

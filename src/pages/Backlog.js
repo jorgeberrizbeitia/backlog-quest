@@ -187,7 +187,7 @@ class Backlog extends Component {
           {!isLoading
             ? filteredMedia.map(eachMedia => {
                 return (
-                  < BacklogMediaInfo
+                  <BacklogMediaInfo
                     eachMediaProp={eachMedia}
                     userPlatformsProp={userPlatforms}
                     userConsolesProp={userConsoles}

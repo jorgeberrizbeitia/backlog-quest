@@ -1,8 +1,5 @@
-# M3 - `README.md` Example
+# Backlog Quest
 
-<br>
-
-# Quick Compo
 
 <br>
 
@@ -21,7 +18,7 @@ This is an app that organizes and manages backlog for different types of media. 
 -  **Delete elements** As a user I can delete elements from my backlog
 -  **Mark elements** As a user I can mark elements in my backlog as done
 -  **Random element** As a user I can get a random element from my backlog
--  **Check profile** As a user I can check my profile and stats
+-  **Check profile** As a user I can check my profile
 
 ## Backlog
 
@@ -29,6 +26,7 @@ This is an app that organizes and manages backlog for different types of media. 
 - Recommendations from friends
 - Books media
 - Comics media
+- Stats
 
 <br>
 

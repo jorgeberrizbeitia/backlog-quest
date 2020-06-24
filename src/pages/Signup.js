@@ -13,26 +13,37 @@ class Signup extends Component {
       "Disney+",
       "HBO Now",
       "Plex",
-      "Other"
+      "Other",
     ],
     selectedPlatforms: [],
     allConsoles: ["Xbox", "Playstation", "Switch", "PC", "Other"],
-    selectedConsoles: []
+    selectedConsoles: [],
+    errorMessage: ""
   };
 
-  handleFormSubmit = event => {
+  handleFormSubmit = (event) => {
     event.preventDefault();
-    const { username, password, selectedPlatforms, selectedConsoles } = this.state;
+    const {
+      username,
+      password,
+      selectedPlatforms,
+      selectedConsoles,
+    } = this.state;
 
-    this.props.signup(username, password, selectedPlatforms, selectedConsoles);
+    this.props.signup(username, password, selectedPlatforms, selectedConsoles)
+     .then(res => console.log(res))
+     .catch(err => {
+       // FIX TO CHANGE DEPENDING ON ERROR MESSAGE
+       this.setState({errorMessage: "Username already taken"})
+     });
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
 
-  togglePlatform = event => {
+  togglePlatform = (event) => {
     event.preventDefault();
 
     const { name, id } = event.target;
@@ -63,7 +74,8 @@ class Signup extends Component {
       allPlatforms,
       selectedPlatforms,
       allConsoles,
-      selectedConsoles
+      selectedConsoles,
+      errorMessage
     } = this.state;
     return (
       <div>
@@ -80,6 +92,7 @@ class Signup extends Component {
               onChange={this.handleChange}
               placeholder="Your name here"
             />
+          <span>{errorMessage}</span>
           </div>
           <div class="form-group">
             <label>Password:</label>
@@ -99,7 +112,7 @@ class Signup extends Component {
 
           <div class="platform-container">
             <div class="btn-group-vertical platforms-list">
-              {allPlatforms.map(eachPlatform => {
+              {allPlatforms.map((eachPlatform) => {
                 return (
                   <button
                     id="platforms"
@@ -118,7 +131,7 @@ class Signup extends Component {
             </div>
 
             <div class="btn-group-vertical platforms-list">
-              {allConsoles.map(eachConsole => {
+              {allConsoles.map((eachConsole) => {
                 return (
                   <button
                     id="consoles"
