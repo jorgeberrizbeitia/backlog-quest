@@ -26,7 +26,6 @@ class Profile extends Component {
     const { selectedPlatforms, selectedConsoles } = this.state;
 
     // use put route here
-
     axios
       .put(
         `${process.env.REACT_APP_API_URL}/profile/${this.props.user._id}`,
