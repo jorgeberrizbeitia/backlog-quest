@@ -1,72 +1,51 @@
 import React, { Component } from "react";
 import { withAuth } from "./../lib/Auth";
 import axios from "axios";
+import PlatformButton from "../components/PlatformButton";
+
 
 class Profile extends Component {
   state = {
     username: "",
     password: "", // not used here atm
-    email: "", // not used atm
-    allPlatforms: [
-      "Netflix",
-      "Amazon Prime",
-      "Disney+",
-      "HBO Now",
-      "Plex",
-      "Other"
-    ],
-    selectedPlatforms: [],
-    allConsoles: ["Xbox", "Playstation", "Switch", "PC", "Other"],
-    selectedConsoles: []
-  };
-
-  handleFormSubmit = event => {
-    event.preventDefault();
-    const { selectedPlatforms, selectedConsoles } = this.state;
-
-    // use put route here
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/profile/${this.props.user._id}`,
-        {
-          platforms: selectedPlatforms,
-          consoles: selectedConsoles
-        },
-        {
-          withCredentials: true
-        }
-      )
-      .then(() => console.log("User platforms updated"))
-      .catch(err => console.log(err));
-  };
-
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
-
-  togglePlatform = event => {
-    event.preventDefault();
-
-    const { name, className } = event.target;
-    let newPlatforms = this.state.selectedPlatforms;
-    let newConsoles = this.state.selectedConsoles;
-
-    if (className.includes("platformBtn")) {
-      if (newPlatforms.includes(name)) {
-        newPlatforms.splice(newPlatforms.indexOf(name), 1);
-      } else {
-        newPlatforms.push(name);
-      }
-      this.setState({ selectedPlatforms: newPlatforms });
-    } else if (className.includes("consoleBtn")) {
-      if (newConsoles.includes(name)) {
-        newConsoles.splice(newConsoles.indexOf(name), 1);
-      } else {
-        newConsoles.push(name);
-      }
-      this.setState({ selectedConsoles: newConsoles });
-    }
+    // email: "", // not used atm
+    allPlatforms: {
+      tv: [
+        "Netflix",
+        "Amazon Prime",
+        "Disney+",
+        "HBO Now",
+        "Plex",
+      ],
+      game: [
+        "Xbox",
+        "Playstation",
+        "Switch",
+        "PC",
+        "Mobile",
+      ],
+      book: [
+        "Kindle Unlimited",
+        "Scribd",
+        "Bookmate",
+        "24symbols",
+        "Playster",
+      ],
+      comic: [
+        "Comixology",
+        "Marvel Unlimited",
+        "DC Universe",
+        "Crunchyroll",
+        "Shonen Jump",
+      ]
+    },
+    selectedPlatforms: {
+      tv: ["Other"],
+      game: ["Other"],
+      book: ["Other"],
+      comic: ["Other"],
+    },
+    acceptedMessage: ""
   };
 
   componentDidMount = () => {
@@ -80,21 +59,59 @@ class Profile extends Component {
         }
       )
       .then(apiResponse => {
+        console.log(apiResponse.data.platforms)
         this.setState({
           username: apiResponse.data.username,
-          selectedPlatforms: apiResponse.data.platforms,
-          selectedConsoles: apiResponse.data.consoles
+          selectedPlatforms: apiResponse.data.platforms
         });
       });
   };
+
+  handleFormSubmit = event => {
+    event.preventDefault();
+
+    axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/profile/${this.props.user._id}`,
+        {
+          platforms: this.state.selectedPlatforms
+        },
+        {
+          withCredentials: true
+        }
+      )
+      .then(() => this.setState({acceptedMessage: "Platforms updated!"}))
+      .catch(err => console.log(err));
+  };
+
+  handleChange = event => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  togglePlatform = (event, platformName, platformType) => {
+    event.preventDefault();
+
+    let newPlatforms = this.state.selectedPlatforms; // variable to reduce syntax of code
+
+    // Dynamically target platforms based on type to update selectedPlatform state
+    if (newPlatforms[platformType].includes(platformName) ) {
+      newPlatforms[platformType].splice(newPlatforms[platformType].indexOf(platformName), 1);
+    } else {
+      newPlatforms[platformType].push(platformName);
+    }
+
+    this.setState({ selectedPlatforms: newPlatforms });
+  };
+
+  
 
   render() {
     const {
       username,
       allPlatforms,
       selectedPlatforms,
-      allConsoles,
-      selectedConsoles
+      acceptedMessage
     } = this.state;
     return (
       <div>
@@ -106,56 +123,64 @@ class Profile extends Component {
 
           <div className="platform-container">
             <div className="btn-group-vertical platforms-list">
-              {allPlatforms.map((eachPlatform, i) => {
-                return (
-                  <button 
-                    key={"platform"+i}
-                    className={
-                      selectedPlatforms.includes(eachPlatform)
-                        ? "platformBtn btn btn-info"
-                        : "platformBtn btn btn-secondary"
-                    }
-                    onClick={this.togglePlatform}
-                    name={eachPlatform}
-                  >
-                    {eachPlatform}
-                  </button>
-                );
-              })}
+              <h5>Films & Series</h5>
+              {allPlatforms.tv.map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms.tv}
+                  platformType={"tv"}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
             </div>
-
             <div className="btn-group-vertical platforms-list">
-              {allConsoles.map((eachConsole, i) => {
-                return (
-                  <button
-                    key={"console"+i}
-                    className={
-                      selectedConsoles.includes(eachConsole)
-                        ? "consoleBtn btn btn-info"
-                        : "consoleBtn btn btn-secondary"
-                    }
-                    onClick={this.togglePlatform}
-                    name={eachConsole}
-                  >
-                    {eachConsole}
-                  </button>
-                );
-              })}
+              <h5>Video Games</h5>
+              {allPlatforms.game.map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms.game}
+                  platformType={"game"}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
+            </div>
+          </div>
+          <br />
+          <div className="platform-container">
+            <div className="btn-group-vertical platforms-list">
+              <h5>Books</h5>
+              {allPlatforms.book.map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms.book}
+                  platformType={"book"}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
+            </div>
+            <div className="btn-group-vertical platforms-list">
+              <h5>Comics</h5>
+              {allPlatforms.comic.map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms.comic}
+                  platformType={"comic"}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
             </div>
           </div>
 
           <p>You can edit this anytime you want!</p>
 
-          {/* <label>Selected Platforms: </label>
-            <ul>
-              {this.state.selectedPlatforms.map(eachPlatform => {
-                return <li>{eachPlatform}</li>;
-              })}
-            </ul> */}
-
           <div className="sign-btn">
             <input className="btn btn-primary" type="submit" value="Update" />
           </div>
+          {acceptedMessage && <h5>{acceptedMessage}</h5>}
         </form>
       </div>
     );

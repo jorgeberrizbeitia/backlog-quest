@@ -7,31 +7,42 @@ class Signup extends Component {
     username: "",
     password: "",
     // email: "", // not used atm
-    allPlatforms: [
-      "Netflix",
-      "Amazon Prime",
-      "Disney+",
-      "HBO Now",
-      "Plex",
-      "Xbox",
-      "Playstation",
-      "Switch",
-      "PC",
-      "Mobile",
-      "Kindle Unlimited",
-      "Scribd",
-      "Bookmate",
-      "24symbols",
-      "Playster",
-      "Comixology",
-      "Marvel Unlimited",
-      "DC Universe",
-      "Crunchyroll",
-      "Shonen Jump",
-    ],
-    selectedPlatforms: [],
-    // allConsoles: ["Xbox", "Playstation", "Switch", "PC", "Other"],
-    // selectedConsoles: [],
+    allPlatforms: {
+      tv: [
+        "Netflix",
+        "Amazon Prime",
+        "Disney+",
+        "HBO Now",
+        "Plex",
+      ],
+      game: [
+        "Xbox",
+        "Playstation",
+        "Switch",
+        "PC",
+        "Mobile",
+      ],
+      book: [
+        "Kindle Unlimited",
+        "Scribd",
+        "Bookmate",
+        "24symbols",
+        "Playster",
+      ],
+      comic: [
+        "Comixology",
+        "Marvel Unlimited",
+        "DC Universe",
+        "Crunchyroll",
+        "Shonen Jump",
+      ]
+    },
+    selectedPlatforms: {
+      tv: ["Other"],
+      game: ["Other"],
+      book: ["Other"],
+      comic: ["Other"],
+    },
     errorMessage: "",
   };
 
@@ -40,8 +51,7 @@ class Signup extends Component {
     const {
       username,
       password,
-      selectedPlatforms,
-      // selectedConsoles,
+      selectedPlatforms
     } = this.state;
 
     this.props
@@ -59,36 +69,19 @@ class Signup extends Component {
     this.setState({ [name]: value });
   };
 
-  togglePlatform = (event) => {
+  togglePlatform = (event, platformName, platformType) => {
     event.preventDefault();
 
-    const { name } = event.target;
-    // const { name, className } = event.target;
-    let newPlatforms = this.state.selectedPlatforms;
-    // let newConsoles = this.state.selectedConsoles;
+    let newPlatforms = this.state.selectedPlatforms; // variable to reduce syntax of code
 
-    if (newPlatforms.includes(name)) {
-      newPlatforms.splice(newPlatforms.indexOf(name), 1);
+    // Dynamically target platforms based on type to update selectedPlatform state
+    if (newPlatforms[platformType].includes(platformName) ) {
+      newPlatforms[platformType].splice(newPlatforms[platformType].indexOf(platformName), 1);
     } else {
-      newPlatforms.push(name);
+      newPlatforms[platformType].push(platformName);
     }
-    this.setState({ selectedPlatforms: newPlatforms });
 
-    // if (className.includes("platformBtn")) {
-    //   if (newPlatforms.includes(name)) {
-    //     newPlatforms.splice(newPlatforms.indexOf(name), 1);
-    //   } else {
-    //     newPlatforms.push(name);
-    //   }
-    //   this.setState({ selectedPlatforms: newPlatforms });
-    // } else if (className.includes("consoleBtn")) {
-    //   if (newConsoles.includes(name)) {
-    //     newConsoles.splice(newConsoles.indexOf(name), 1);
-    //   } else {
-    //     newConsoles.push(name);
-    //   }
-    //   this.setState({ selectedConsoles: newConsoles });
-    // }
+    this.setState({ selectedPlatforms: newPlatforms });
   };
 
   render() {
@@ -135,22 +128,24 @@ class Signup extends Component {
           <div className="platform-container">
             <div className="btn-group-vertical platforms-list">
               <h5>Films & Series</h5>
-              {allPlatforms.slice(0, 5).map((eachPlatform, i) => (
+              {allPlatforms.tv.map((eachPlatform, i) => (
                 <PlatformButton
                   key={"platform" + i}
                   eachPlatform={eachPlatform}
-                  selectedPlatforms={selectedPlatforms}
+                  selectedPlatforms={selectedPlatforms.tv}
+                  platformType={"tv"}
                   togglePlatform={this.togglePlatform}
                 />
               ))}
             </div>
             <div className="btn-group-vertical platforms-list">
               <h5>Video Games</h5>
-              {allPlatforms.slice(5, 10).map((eachPlatform, i) => (
+              {allPlatforms.game.map((eachPlatform, i) => (
                 <PlatformButton
                   key={"platform" + i}
                   eachPlatform={eachPlatform}
-                  selectedPlatforms={selectedPlatforms}
+                  selectedPlatforms={selectedPlatforms.game}
+                  platformType={"game"}
                   togglePlatform={this.togglePlatform}
                 />
               ))}
@@ -160,22 +155,24 @@ class Signup extends Component {
           <div className="platform-container">
             <div className="btn-group-vertical platforms-list">
               <h5>Books</h5>
-              {allPlatforms.slice(10, 15).map((eachPlatform, i) => (
+              {allPlatforms.book.map((eachPlatform, i) => (
                 <PlatformButton
                   key={"platform" + i}
                   eachPlatform={eachPlatform}
-                  selectedPlatforms={selectedPlatforms}
+                  selectedPlatforms={selectedPlatforms.book}
+                  platformType={"book"}
                   togglePlatform={this.togglePlatform}
                 />
               ))}
             </div>
             <div className="btn-group-vertical platforms-list">
               <h5>Comics</h5>
-              {allPlatforms.slice(15, 20).map((eachPlatform, i) => (
+              {allPlatforms.comic.map((eachPlatform, i) => (
                 <PlatformButton
                   key={"platform" + i}
                   eachPlatform={eachPlatform}
-                  selectedPlatforms={selectedPlatforms}
+                  selectedPlatforms={selectedPlatforms.comic}
+                  platformType={"comic"}
                   togglePlatform={this.togglePlatform}
                 />
               ))}

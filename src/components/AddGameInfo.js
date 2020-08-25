@@ -6,7 +6,8 @@ export class AddGameInfo extends Component {
     selectedResult: this.props.selectedResultProp,
     selectedConsole: "",
     selectedMediaType: this.props.searchTypeProp,
-    availableConsoles: this.props.userConsolesProp
+    availableConsoles: this.props.userConsolesProp,
+    acceptedPlatforms: ["Xbox", "Playstation", "Switch", "PC", "Mobile", "Other"]
   };
 
   handleChange = event => {

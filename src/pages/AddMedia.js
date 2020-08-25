@@ -13,8 +13,7 @@ export class AddMedia extends Component {
     searchQuery: "",
     searchResults: [],
     searchType: "", // to use different api url
-    userPlatforms: [],
-    userConsoles: []
+    userPlatforms: []
   };
 
   handleChange = event => {
@@ -33,8 +32,6 @@ export class AddMedia extends Component {
   handleFormSubmitForGames = event => {
     event.preventDefault();
     const { searchQuery } = this.state;
-
-    
     
     axios({
       method: "GET",
@@ -59,6 +56,36 @@ export class AddMedia extends Component {
 
     this.setState({ searchResults: [] });
   };
+
+
+  handleFormSubmitForBooks = event => {
+    event.preventDefault();
+    const { searchQuery } = this.state;
+
+    axios({
+      method: "GET",
+      url: "https://chicken-coop.p.rapidapi.com/games",
+      headers: {
+        "content-type": "application/octet-stream",
+        "x-rapidapi-host": "chicken-coop.p.rapidapi.com",
+        "x-rapidapi-key": process.env.REACT_APP_GAMES_CLIENT_KEY // NEED TO CHANGE THIS TO .ENV API KEY
+      },
+      params: {
+        title: `${searchQuery}`
+      }
+    })
+      .then(data => {
+        // to remove data without images because who needs those anyway
+        const newData = data.data.result.filter(
+          e => e.image !== null
+        );
+        this.setState({ searchResults: newData });
+      })
+      .catch(err => console.log(err));
+
+    this.setState({ searchResults: [] });
+  };
+
 
   handleFormSubmit = event => {
     event.preventDefault();
@@ -100,8 +127,7 @@ export class AddMedia extends Component {
       )
       .then(apiResponse => {
         this.setState({
-          userPlatforms: apiResponse.data.platforms,
-          userConsoles: apiResponse.data.consoles
+          userPlatforms: apiResponse.data.platforms
         });
       });
   };
@@ -111,8 +137,7 @@ export class AddMedia extends Component {
       searchQuery,
       searchResults,
       searchType,
-      userPlatforms,
-      userConsoles
+      userPlatforms
     } = this.state;
 
     return (
@@ -179,27 +204,32 @@ export class AddMedia extends Component {
           <div className="column flex-column flex-nowrap">
             {/* ternary on map to show different components based on if it is film/series or games */}
 
-            {searchType === "Game"
-              ? searchResults.map((selectedResult, i) => {
-                  return (
-                    <AddGameInfo
-                      key={"game"+i}
-                      selectedResultProp={selectedResult}
-                      searchTypeProp={searchType}
-                      userConsolesProp={userConsoles}
-                    />
-                  );
-                })
-              : searchResults.map((selectedResult, i) => {
-                  return (
-                    <AddVideoInfo
-                      key={"media"+i}
-                      selectedResultProp={selectedResult}
-                      searchTypeProp={searchType}
-                      userPlatformsProp={userPlatforms}
-                    />
-                  );
-                })}
+            {searchType === "Game" &&
+              searchResults.map((selectedResult, i) => {
+                return (
+                  <AddGameInfo
+                    key={"game"+i}
+                    selectedResultProp={selectedResult}
+                    searchTypeProp={searchType}
+                    userConsolesProp={userPlatforms}
+                  />
+                );
+              })
+            }
+
+            {searchType === "Film" && 
+              searchResults.map((selectedResult, i) => {
+                return (
+                  <AddVideoInfo
+                    key={"media"+i}
+                    selectedResultProp={selectedResult}
+                    searchTypeProp={searchType}
+                    userPlatformsProp={userPlatforms}
+                  />
+                );
+              })
+            }
+
           </div>
         </div>
 

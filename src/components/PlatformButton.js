@@ -8,8 +8,7 @@ function PlatformButton(props) {
           ? "platformBtn btn btn-info"
           : "platformBtn btn btn-secondary"
       }
-      onClick={props.togglePlatform}
-      name={props.eachPlatform}
+      onClick={(e) => props.togglePlatform(e, props.eachPlatform, props.platformType)}
     >
       {props.eachPlatform}
     </button>
