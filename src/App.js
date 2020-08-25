@@ -21,16 +21,21 @@ class App extends Component {
         <Navbar />
 
         <Switch>
+          {/* routes available for all users  */}
           <Route exact path="/" component={Home} />
 
+          {/* routes only for users logged out  */}
           <AnonRoute exact path="/signup" component={Signup} />
           <AnonRoute exact path="/login" component={Login} />
 
+          {/* routes only for users logged in  */}
           <PrivateRoute exact path="/backlog" component={Backlog} />
           <PrivateRoute exact path="/done" component={DoneList} />
-          <PrivateRoute exact path="/add/films" component={AddMedia} />
+          <PrivateRoute exact path="/add-media" component={AddMedia} />
           <PrivateRoute exact path="/profile" component={Profile} />
+          
         </Switch>
+
       </div>
     );
   }

@@ -84,43 +84,43 @@ class DoneList extends Component {
 
     return (
       <div>
-        <nav class="navbar navbar-light bg-light">
+        <nav className="navbar navbar-light bg-light">
           <button
             type="button"
-            class="btn btn-success"
+            className="btn btn-success"
             onClick={this.filterMedia}
             name="Series"
           >
-            <i class="fas fa-tv"></i> Series
+            <i className="fas fa-tv"></i> Series
           </button>
 
           <button
             type="button"
-            class="btn btn-success"
+            className="btn btn-success"
             onClick={this.filterMedia}
             name="Film"
           >
-            <i class="fas fa-film"></i> Films
+            <i className="fas fa-film"></i> Films
           </button>
 
           <button
             type="button"
-            class="btn btn-success"
+            className="btn btn-success"
             onClick={this.filterMedia}
             name="Game"
           >
-            <i class="fas fa-gamepad"></i> Games
+            <i className="fas fa-gamepad"></i> Games
           </button>
         </nav>
-        <div class="alert alert-success" role="alert">
+        <div className="alert alert-success" role="alert">
           Done List
         </div>
 
-        <div class="list-group">
+        <div className="list-group">
           {!isLoading
-            ? filteredMedia.map(eachMedia => {
+            ? filteredMedia.map((eachMedia, i) => {
                 return (
-                  <BacklogMediaInfo
+                  <BacklogMediaInfo key={"done"+i}
                     eachMediaProp={eachMedia}
                     deleteMediaProp={this.deleteMedia}
                     toggleDoneProp={this.toggleDone}
@@ -129,9 +129,9 @@ class DoneList extends Component {
               })
             : null}
         </div>
-        <nav class="navbar navbar-light bg-light footerbar">
-          <Link class="btn btn-success btn-circle" to={"/backlog"}>
-            <i class="fas fa-arrow-alt-circle-left"></i>
+        <nav className="navbar navbar-light bg-light footerbar">
+          <Link className="btn btn-success btn-circle" to={"/backlog"}>
+            <i className="fas fa-arrow-alt-circle-left"></i>
           </Link>
         </nav>
       </div>

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { withAuth } from "./../lib/Auth";
 import axios from "axios";
 
@@ -49,18 +48,18 @@ class Profile extends Component {
   togglePlatform = event => {
     event.preventDefault();
 
-    const { name, id } = event.target;
+    const { name, className } = event.target;
     let newPlatforms = this.state.selectedPlatforms;
     let newConsoles = this.state.selectedConsoles;
 
-    if (id === "platforms") {
+    if (className.includes("platformBtn")) {
       if (newPlatforms.includes(name)) {
         newPlatforms.splice(newPlatforms.indexOf(name), 1);
       } else {
         newPlatforms.push(name);
       }
       this.setState({ selectedPlatforms: newPlatforms });
-    } else if (id === "consoles") {
+    } else if (className.includes("consoleBtn")) {
       if (newConsoles.includes(name)) {
         newConsoles.splice(newConsoles.indexOf(name), 1);
       } else {
@@ -105,16 +104,16 @@ class Profile extends Component {
 
           {/* Here you can observe magic happening by mapping on arrays and hard-coding style based on .includes */}
 
-          <div class="platform-container">
-            <div class="btn-group-vertical platforms-list">
-              {allPlatforms.map(eachPlatform => {
+          <div className="platform-container">
+            <div className="btn-group-vertical platforms-list">
+              {allPlatforms.map((eachPlatform, i) => {
                 return (
-                  <button
-                    id="platforms"
-                    class={
+                  <button 
+                    key={"platform"+i}
+                    className={
                       selectedPlatforms.includes(eachPlatform)
-                        ? "btn btn-info"
-                        : "btn btn-secondary"
+                        ? "platformBtn btn btn-info"
+                        : "platformBtn btn btn-secondary"
                     }
                     onClick={this.togglePlatform}
                     name={eachPlatform}
@@ -125,15 +124,15 @@ class Profile extends Component {
               })}
             </div>
 
-            <div class="btn-group-vertical platforms-list">
-              {allConsoles.map(eachConsole => {
+            <div className="btn-group-vertical platforms-list">
+              {allConsoles.map((eachConsole, i) => {
                 return (
                   <button
-                    id="consoles"
-                    class={
+                    key={"console"+i}
+                    className={
                       selectedConsoles.includes(eachConsole)
-                        ? "btn btn-info"
-                        : "btn btn-secondary"
+                        ? "consoleBtn btn btn-info"
+                        : "consoleBtn btn btn-secondary"
                     }
                     onClick={this.togglePlatform}
                     name={eachConsole}
@@ -154,8 +153,8 @@ class Profile extends Component {
               })}
             </ul> */}
 
-          <div class="sign-btn">
-            <input class="btn btn-primary" type="submit" value="Update" />
+          <div className="sign-btn">
+            <input className="btn btn-primary" type="submit" value="Update" />
           </div>
         </form>
       </div>

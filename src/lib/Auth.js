@@ -1,16 +1,15 @@
-//	lib/Auth.js
-
 import React, { Component } from "react";
 import authService from "./auth-service"; // IMPORT functions for axios requests to API
 const { Consumer, Provider } = React.createContext();
 
-// HOC to create a Consumer
+// Consumer
 const withAuth = WrappedComponent => {
   return class extends Component {
     render() {
       return (
         <Consumer>
           {({ login, signup, logout, user, isLoggedIn }) => {
+            // Passing all props coming from Provider into the component in the parameter: withAuth(Component)
             return (
               <WrappedComponent
                 user={user}
@@ -28,17 +27,17 @@ const withAuth = WrappedComponent => {
   };
 };
 
-/* 
-// HOC - function component example of the same functionality
-function withAuthFunc(WrappedComponent) {
-  return function(props) {
-    // props will belong to the WrappedComponent
-    return (
-      <Consumer>{value => <WrappedComponent {...value} {...props} />}</Consumer>
-    );
-  };
-}
- */
+
+// // HOC - function component example of the same functionality
+// function withAuthFunc(WrappedComponent) {
+//   return function(props) {
+//     // props will belong to the WrappedComponent
+//     return (
+//       <Consumer>{value => <WrappedComponent {...value} {...props} />}</Consumer>
+//     );
+//   };
+// }
+
 
 // Provider
 class AuthProvider extends React.Component {
@@ -60,11 +59,11 @@ class AuthProvider extends React.Component {
       );
   }
 
-  signup = (username, password, platforms, consoles) => {
+  signup = (username, password, platforms) => {
     return authService
-      .signup({ username, password, platforms, consoles })
+      .signup({ username, password, platforms })
       .then(user => this.setState({ isLoggedIn: true, user }))
-      //.catch(err => console.log(err));
+      // .catch(err => console.log(err));
       // catch in Signup.js to show message
   };
 
@@ -86,6 +85,7 @@ class AuthProvider extends React.Component {
     const { isLoading, isLoggedIn, user } = this.state;
     const { login, logout, signup } = this;
 
+    // passing to the Consumer, all service calls from authService will be available everywhere the HOC withAuth is used.
     return (
       <Provider value={{ isLoading, isLoggedIn, user, login, logout, signup }}>
         {this.props.children}

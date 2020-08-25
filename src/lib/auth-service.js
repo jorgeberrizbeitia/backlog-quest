@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// service for all authenticator axios calls
 class Auth {
   constructor() {
     this.auth = axios.create({
@@ -10,27 +11,22 @@ class Auth {
 
   signup({ username, password, platforms, consoles }) {
     return this.auth
-      .post("/auth/signup", { username, password, platforms, consoles })
+      .post("/auth/signup", { username, password, platforms })
       .then(({ data }) => data);
-    // .then((response) => response.data);
   }
 
   login({ username, password }) {
     return this.auth
       .post("/auth/login", { username, password })
       .then(({ data }) => data)
-      //.catch(err => console.log("username taken"))
-    // .then((response) => response.data);
   }
 
   logout() {
     return this.auth.post("/auth/logout", {}).then(({ data }) => data);
-    // return this.auth.post("/auth/logout", {}).then((response) => response.data);
   }
 
   me() {
     return this.auth.get("/auth/me").then(({ data }) => data);
-    // return this.auth.get("/auth/me").then((response) => response.data);
   }
 }
 

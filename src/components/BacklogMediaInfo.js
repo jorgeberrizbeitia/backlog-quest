@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 
 export class BacklogMediaInfo extends Component {
   state = {
@@ -50,21 +49,20 @@ componentWillUnmount() {
       eachMediaProp,
       userPlatformsProp,
       userConsolesProp,
-      toggleDoneProp
     } = this.props;
     return (
       <div>
         <button
-          class="list-group-item list-group-item-action list-items"
+          className="list-group-item list-group-item-action list-items"
           onClick={this.showAdditionalInfo}
         >
           {/* Magnificent ternary to add icon depending on media type */}
           {eachMediaProp.type === "Series" ? (
-            <i class="fas fa-tv"></i>
+            <i className="fas fa-tv"></i>
           ) : eachMediaProp.type === "Film" ? (
-            <i class="fas fa-film"></i>
+            <i className="fas fa-film"></i>
           ) : eachMediaProp.type === "Game" ? (
-            <i class="fas fa-gamepad"></i>
+            <i className="fas fa-gamepad"></i>
           ) : null}
           <b>
             {" "}
@@ -80,13 +78,13 @@ componentWillUnmount() {
         {/* TERNARY OPERATOR SHOULD SHOW THE DIV AS AN ADITIONAL COMPONENT */}
         {this.state.toogleInfo ? (
           <div>
-            <div class="card">
-              <div class="add-info-container">
+            <div className="card">
+              <div className="add-info-container">
                 <div>
-                  <img src={eachMediaProp.image} class="card-img" alt="..." />
+                  <img src={eachMediaProp.image} className="card-img" alt="..." />
                 </div>
-                <div class="card-body">
-                  <p class="card-text">
+                <div className="card-body">
+                  <p className="card-text">
                     <b>title: </b>
                     {eachMediaProp.title}
                     <br />
@@ -104,7 +102,7 @@ componentWillUnmount() {
                 </div>
               </div>
 
-              <div class="add-info-container">
+              <div className="add-info-container">
                 <h5>Platform:</h5>
 
                 {eachMediaProp.done ? (
@@ -112,7 +110,7 @@ componentWillUnmount() {
                 ) : (
                   <select
                     type="button"
-                    class="btn btn-outline-info info-btns platform-dropdown"
+                    className="btn btn-outline-info info-btns platform-dropdown"
                     id={eachMediaProp._id}
                     onChange={this.handleChange}
                     name="platforms"
@@ -120,14 +118,14 @@ componentWillUnmount() {
                   >
                     {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
                     {eachMediaProp.type === "Game"
-                      ? userConsolesProp.map(eachConsole => {
+                      ? userConsolesProp.map((eachConsole, i) => {
                           return (
-                            <option value={eachConsole}>{eachConsole}</option>
+                            <option key={"console"+i} value={eachConsole}>{eachConsole}</option>
                           );
                         })
-                      : userPlatformsProp.map(eachPlatform => {
+                      : userPlatformsProp.map((eachPlatform, i) => {
                           return (
-                            <option value={eachPlatform}>{eachPlatform}</option>
+                            <option key={"platform"+i} value={eachPlatform}>{eachPlatform}</option>
                           );
                         })}
                   </select>
@@ -136,7 +134,7 @@ componentWillUnmount() {
 
               <button
                 type="button"
-                class="btn btn-outline-danger info-btns"
+                className="btn btn-outline-danger info-btns"
                 onClick={() => this.handleDeleteClick(eachMediaProp._id)}
               >
                 delete
@@ -144,7 +142,7 @@ componentWillUnmount() {
 
               <button
                 type="button"
-                class={ eachMediaProp.done ? "btn btn-outline-info info-btns" : "btn btn-outline-success info-btns" }
+                className={ eachMediaProp.done ? "btn btn-outline-info info-btns" : "btn btn-outline-success info-btns" }
                 onClick={() =>
                   this.handleDoneClick(eachMediaProp._id, eachMediaProp.done)
                 }

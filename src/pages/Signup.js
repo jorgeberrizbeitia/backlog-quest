@@ -1,24 +1,38 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { withAuth } from "./../lib/Auth";
+import PlatformButton from "../components/PlatformButton";
 
 class Signup extends Component {
   state = {
     username: "",
     password: "",
-    email: "", // not used atm
+    // email: "", // not used atm
     allPlatforms: [
       "Netflix",
       "Amazon Prime",
       "Disney+",
       "HBO Now",
       "Plex",
-      "Other",
+      "Xbox",
+      "Playstation",
+      "Switch",
+      "PC",
+      "Mobile",
+      "Kindle Unlimited",
+      "Scribd",
+      "Bookmate",
+      "24symbols",
+      "Playster",
+      "Comixology",
+      "Marvel Unlimited",
+      "DC Universe",
+      "Crunchyroll",
+      "Shonen Jump",
     ],
     selectedPlatforms: [],
-    allConsoles: ["Xbox", "Playstation", "Switch", "PC", "Other"],
-    selectedConsoles: [],
-    errorMessage: ""
+    // allConsoles: ["Xbox", "Playstation", "Switch", "PC", "Other"],
+    // selectedConsoles: [],
+    errorMessage: "",
   };
 
   handleFormSubmit = (event) => {
@@ -27,15 +41,17 @@ class Signup extends Component {
       username,
       password,
       selectedPlatforms,
-      selectedConsoles,
+      // selectedConsoles,
     } = this.state;
 
-    this.props.signup(username, password, selectedPlatforms, selectedConsoles)
-     .then(res => console.log(res))
-     .catch(err => {
-       // FIX TO CHANGE DEPENDING ON ERROR MESSAGE
-       this.setState({errorMessage: "Username already taken"})
-     });
+    this.props
+      .signup(username, password, selectedPlatforms)
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log(err)
+        // FIX TO CHANGE DEPENDING ON ERROR MESSAGE
+        this.setState({ errorMessage: "Username already taken" });
+      });
   };
 
   handleChange = (event) => {
@@ -46,25 +62,33 @@ class Signup extends Component {
   togglePlatform = (event) => {
     event.preventDefault();
 
-    const { name, id } = event.target;
+    const { name } = event.target;
+    // const { name, className } = event.target;
     let newPlatforms = this.state.selectedPlatforms;
-    let newConsoles = this.state.selectedConsoles;
+    // let newConsoles = this.state.selectedConsoles;
 
-    if (id === "platforms") {
-      if (newPlatforms.includes(name)) {
-        newPlatforms.splice(newPlatforms.indexOf(name), 1);
-      } else {
-        newPlatforms.push(name);
-      }
-      this.setState({ selectedPlatforms: newPlatforms });
-    } else if (id === "consoles") {
-      if (newConsoles.includes(name)) {
-        newConsoles.splice(newConsoles.indexOf(name), 1);
-      } else {
-        newConsoles.push(name);
-      }
-      this.setState({ selectedConsoles: newConsoles });
+    if (newPlatforms.includes(name)) {
+      newPlatforms.splice(newPlatforms.indexOf(name), 1);
+    } else {
+      newPlatforms.push(name);
     }
+    this.setState({ selectedPlatforms: newPlatforms });
+
+    // if (className.includes("platformBtn")) {
+    //   if (newPlatforms.includes(name)) {
+    //     newPlatforms.splice(newPlatforms.indexOf(name), 1);
+    //   } else {
+    //     newPlatforms.push(name);
+    //   }
+    //   this.setState({ selectedPlatforms: newPlatforms });
+    // } else if (className.includes("consoleBtn")) {
+    //   if (newConsoles.includes(name)) {
+    //     newConsoles.splice(newConsoles.indexOf(name), 1);
+    //   } else {
+    //     newConsoles.push(name);
+    //   }
+    //   this.setState({ selectedConsoles: newConsoles });
+    // }
   };
 
   render() {
@@ -73,31 +97,29 @@ class Signup extends Component {
       password,
       allPlatforms,
       selectedPlatforms,
-      allConsoles,
-      selectedConsoles,
-      errorMessage
+      errorMessage,
     } = this.state;
     return (
       <div>
         <h1>Sign Up</h1>
 
         <form onSubmit={this.handleFormSubmit}>
-          <div class="form-group">
+          <div className="form-group">
             <label>Username:</label>
             <input
-              class="form-control"
+              className="form-control"
               type="text"
               name="username"
               value={username}
               onChange={this.handleChange}
               placeholder="Your name here"
             />
-          <span>{errorMessage}</span>
+            <span>{errorMessage}</span>
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <label>Password:</label>
             <input
-              class="form-control"
+              className="form-control"
               type="password"
               name="password"
               value={password}
@@ -110,57 +132,60 @@ class Signup extends Component {
 
           {/* Here you can observe magic happening by mapping on arrays and hard-coding style based on .includes */}
 
-          <div class="platform-container">
-            <div class="btn-group-vertical platforms-list">
-              {allPlatforms.map((eachPlatform) => {
-                return (
-                  <button
-                    id="platforms"
-                    class={
-                      selectedPlatforms.includes(eachPlatform)
-                        ? "btn btn-info"
-                        : "btn btn-secondary"
-                    }
-                    onClick={this.togglePlatform}
-                    name={eachPlatform}
-                  >
-                    {eachPlatform}
-                  </button>
-                );
-              })}
+          <div className="platform-container">
+            <div className="btn-group-vertical platforms-list">
+              <h5>Films & Series</h5>
+              {allPlatforms.slice(0, 5).map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
             </div>
-
-            <div class="btn-group-vertical platforms-list">
-              {allConsoles.map((eachConsole) => {
-                return (
-                  <button
-                    id="consoles"
-                    class={
-                      selectedConsoles.includes(eachConsole)
-                        ? "btn btn-info"
-                        : "btn btn-secondary"
-                    }
-                    onClick={this.togglePlatform}
-                    name={eachConsole}
-                  >
-                    {eachConsole}
-                  </button>
-                );
-              })}
+            <div className="btn-group-vertical platforms-list">
+              <h5>Video Games</h5>
+              {allPlatforms.slice(5, 10).map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
+            </div>
+          </div>
+          <br />
+          <div className="platform-container">
+            <div className="btn-group-vertical platforms-list">
+              <h5>Books</h5>
+              {allPlatforms.slice(10, 15).map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
+            </div>
+            <div className="btn-group-vertical platforms-list">
+              <h5>Comics</h5>
+              {allPlatforms.slice(15, 20).map((eachPlatform, i) => (
+                <PlatformButton
+                  key={"platform" + i}
+                  eachPlatform={eachPlatform}
+                  selectedPlatforms={selectedPlatforms}
+                  togglePlatform={this.togglePlatform}
+                />
+              ))}
             </div>
           </div>
 
           <p>Don't worry, you will be able to edit this later</p>
 
-          {/* <label>Selected Platforms: </label>
-            <ul>
-              {this.state.selectedPlatforms.map(eachPlatform => {
-                return <li>{eachPlatform}</li>;
-              })}
-            </ul> */}
-
-          <div class="sign-btn">
-            <input class="btn btn-primary" type="submit" value="Signup" />
+          <div className="sign-btn">
+            <input className="btn btn-primary" type="submit" value="Signup" />
           </div>
         </form>
       </div>

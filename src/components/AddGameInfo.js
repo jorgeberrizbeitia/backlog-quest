@@ -123,14 +123,14 @@ export class AddGameInfo extends Component {
   render() {
     const { selectedResult, selectedConsole, availableConsoles } = this.state;
     return (
-      <div class="card">
-        <div class="card-body">
+      <div className="card">
+        <div className="card-body">
           <h7>{selectedResult.title} on {selectedResult.platform}</h7>
 
           <div add-info-container>
 
               <select
-                class="btn btn-outline-info platforms-list"
+                className="btn btn-outline-info platforms-list"
                 id={selectedResult.title}
                 name="selectedConsole"
                 value={selectedConsole}
@@ -141,13 +141,13 @@ export class AddGameInfo extends Component {
                   Select!
                 </option>
                 {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
-                {availableConsoles.map(eachConsole => {
-                  return <option value={eachConsole}>{eachConsole}</option>;
+                {availableConsoles.map((eachConsole, i) => {
+                  return <option key={"option"+i} value={eachConsole}>{eachConsole}</option>;
                 })}
               </select>
 
               <button
-                class="btn btn-info"
+                className="btn btn-info"
                 onClick={event => this.addResult(event, selectedResult)}
               >
                 Add to Backlog

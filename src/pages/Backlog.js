@@ -151,43 +151,43 @@ class Backlog extends Component {
 
     return (
       <div>
-        <nav class="navbar navbar-light bg-light">
+        <nav className="navbar navbar-light bg-light">
           <button
             type="button"
-            class="btn btn-info"
+            className="btn btn-info"
             onClick={this.filterMedia}
             name="Series"
           >
-            <i class="fas fa-tv"></i> Series
+            <i className="fas fa-tv"></i> Series
           </button>
 
           <button
             type="button"
-            class="btn btn-info"
+            className="btn btn-info"
             onClick={this.filterMedia}
             name="Film"
           >
-            <i class="fas fa-film"></i> Films
+            <i className="fas fa-film"></i> Films
           </button>
 
           <button
             type="button"
-            class="btn btn-info"
+            className="btn btn-info"
             onClick={this.filterMedia}
             name="Game"
           >
-            <i class="fas fa-gamepad"></i> Games
+            <i className="fas fa-gamepad"></i> Games
           </button>
         </nav>
-        <div class="alert alert-info" role="alert">
+        <div className="alert alert-info" role="alert">
           Backlog List
         </div>
 
-        <div class="list-group">
+        <div className="list-group">
           {!isLoading
-            ? filteredMedia.map(eachMedia => {
+            ? filteredMedia.map((eachMedia, i) => {
                 return (
-                  <BacklogMediaInfo
+                  <BacklogMediaInfo key={"media"+i}
                     eachMediaProp={eachMedia}
                     userPlatformsProp={userPlatforms}
                     userConsolesProp={userConsoles}
@@ -200,19 +200,19 @@ class Backlog extends Component {
             : null}
         </div>
 
-        <nav class="navbar navbar-light bg-light footerbar">
-          <Link class="btn btn-outline-info" type="button" to={"/add/films"}>
-            <i class="fas fa-plus"></i>
+        <nav className="navbar navbar-light bg-light footerbar">
+          <Link className="btn btn-outline-info" type="button" to={"/add-media"}>
+            <i className="fas fa-plus"></i>
           </Link>
           <button
             onClick={this.randomMedia}
-            class="btn btn-info btn-circle btn-xl"
+            className="btn btn-info btn-circle btn-xl"
           >
-            <i class="fas fa-random icon"></i>
+            <i className="fas fa-random icon"></i>
           </button>
 
-          <Link class="btn btn-outline-info" type="button" to={"/profile"}>
-            <i class="fas fa-user"></i>
+          <Link className="btn btn-outline-info" type="button" to={"/profile"}>
+            <i className="fas fa-user"></i>
           </Link>
         </nav>
       </div>

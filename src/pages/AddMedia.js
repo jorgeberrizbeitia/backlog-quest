@@ -5,8 +5,8 @@ import AddVideoInfo from "../components/AddVideoInfo";
 import AddGameInfo from "../components/AddGameInfo";
 import { Link } from "react-router-dom";
 
-// import { HowLongToBeatService, HowLongToBeatEntry } from "howlongtobeat";
-// let hltbService = new HowLongToBeatService();
+import { HowLongToBeatService, HowLongToBeatEntry } from "howlongtobeat";
+let hltbService = new HowLongToBeatService();
 
 export class AddMedia extends Component {
   state = {
@@ -22,12 +22,20 @@ export class AddMedia extends Component {
     this.setState({ [name]: value });
   };
 
+  test = () => {
+    let name = "Nioh"
+    hltbService.search(name).then(result => {
+      let filteredResult = result.filter(game => game.name.toLowerCase() === name.toLowerCase())
+      console.log(filteredResult[0])
+    });
+  } 
+
   handleFormSubmitForGames = event => {
     event.preventDefault();
     const { searchQuery } = this.state;
 
-    // hltbService.search("Nioh").then(result => console.log(result));
-
+    
+    
     axios({
       method: "GET",
       url: "https://chicken-coop.p.rapidapi.com/games",
@@ -109,42 +117,42 @@ export class AddMedia extends Component {
 
     return (
       <div>
-        <nav class="navbar navbar-light bg-light">
+        <nav className="navbar navbar-light bg-light">
           <button
             type="button"
-            class="btn btn-info"
+            className="btn btn-info"
             onClick={this.selectMediaType}
             name="Series"
           >
-            <i class="fas fa-tv"></i> Series
+            <i className="fas fa-tv"></i> Series
           </button>
 
           <button
             type="button"
-            class="btn btn-info"
+            className="btn btn-info"
             onClick={this.selectMediaType}
             name="Film"
           >
-            <i class="fas fa-film"></i> Films
+            <i className="fas fa-film"></i> Films
           </button>
 
           <button
             type="button"
-            class="btn btn-info"
+            className="btn btn-info"
             onClick={this.selectMediaType}
             name="Game"
           >
-            <i class="fas fa-gamepad"></i> Games
+            <i className="fas fa-gamepad"></i> Games
           </button>
         </nav>
 
         {searchType === "" ? (
-          <div class="alert alert-warning" role="alert">
+          <div className="alert alert-warning" role="alert">
             <h3>Select a media type!</h3>
           </div>
         ) : (
           <form
-            class="form-inline"
+            className="form-inline"
             onSubmit={
               searchType === "Game"
                 ? this.handleFormSubmitForGames
@@ -152,7 +160,7 @@ export class AddMedia extends Component {
             }
           >
             <input
-              class="form-control mr-sm-2 search-input"
+              className="form-control mr-sm-2 search-input"
               type="search"
               name="searchQuery"
               value={searchQuery}
@@ -160,30 +168,32 @@ export class AddMedia extends Component {
               placeholder={searchType}
             />
             <input
-              class="btn btn-outline-success my-2 my-sm-0"
+              className="btn btn-outline-success my-2 my-sm-0"
               type="submit"
               value="Search"
             />
           </form>
         )}
 
-        <div class="list-group">
-          <div class="column flex-column flex-nowrap">
+        <div className="list-group">
+          <div className="column flex-column flex-nowrap">
             {/* ternary on map to show different components based on if it is film/series or games */}
 
             {searchType === "Game"
-              ? searchResults.map(selectedResult => {
+              ? searchResults.map((selectedResult, i) => {
                   return (
                     <AddGameInfo
+                      key={"game"+i}
                       selectedResultProp={selectedResult}
                       searchTypeProp={searchType}
                       userConsolesProp={userConsoles}
                     />
                   );
                 })
-              : searchResults.map(selectedResult => {
+              : searchResults.map((selectedResult, i) => {
                   return (
                     <AddVideoInfo
+                      key={"media"+i}
                       selectedResultProp={selectedResult}
                       searchTypeProp={searchType}
                       userPlatformsProp={userPlatforms}
@@ -193,10 +203,11 @@ export class AddMedia extends Component {
           </div>
         </div>
 
-        <nav class="navbar navbar-light bg-light footerbar">
-          <Link class="btn btn-info btn-circle" to={"/backlog"}>
-            <i class="fas fa-arrow-alt-circle-left"></i>
+        <nav className="navbar navbar-light bg-light footerbar">
+          <Link className="btn btn-info btn-circle" to={"/backlog"}>
+            <i className="fas fa-arrow-alt-circle-left"></i>
           </Link>
+          <button onClick={this.test}>Test</button>
         </nav>
       </div>
     );

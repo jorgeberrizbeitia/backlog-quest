@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "./lib/Auth";
+import { BrowserRouter } from "react-router-dom"; // to use routes, params and redirect
+import { AuthProvider } from "./lib/Auth"; // Context for passing auth information
 import App from "./App";
 require('dotenv').config();
 
 ReactDOM.render(
-  <Router>
+  <BrowserRouter>
     <AuthProvider>
       <App />
     </AuthProvider>
-  </Router>,
+  </BrowserRouter>,
   document.getElementById("root")
 );

@@ -16,7 +16,7 @@ class Login extends Component {
     this.setState({ [name]: value });
   };
 
-  
+
   render() {
     const { username, password } = this.state;
 
@@ -25,10 +25,10 @@ class Login extends Component {
         <h1>Login</h1>
 
         <form onSubmit={this.handleFormSubmit}>
-          <div class="form-group">
+          <div className="form-group">
             <label>Username:</label>
             <input
-              class="form-control"
+              className="form-control"
               type="text"
               name="username"
               value={username}
@@ -37,10 +37,10 @@ class Login extends Component {
             />
           </div>
 
-          <div class="form-group">
-            <label for="exampleInputPassword1">Password:</label>
+          <div className="form-group">
+            <label>Password:</label>
             <input
-              class="form-control"
+              className="form-control"
               type="password"
               name="password"
               value={password}
@@ -48,9 +48,9 @@ class Login extends Component {
               placeholder="And your password here"
             />
           </div>
-<div class="sign-btn">
+<div className="sign-btn">
 
-          <input class="btn btn-primary" type="submit" value="Login" />
+          <input className="btn btn-primary" type="submit" value="Login" />
 </div>
         </form>
       </div>

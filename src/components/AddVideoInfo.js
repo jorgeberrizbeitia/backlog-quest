@@ -68,14 +68,14 @@ export class AddVideoInfo extends Component {
       "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" +
       selectedResult.poster_path;
     return (
-      <div class="card">
-        <div class="add-info-container">
+      <div className="card">
+        <div className="add-info-container">
           <div>
-            <img class="card-img-top" src={ImageUrl} alt="poster" />
+            <img className="card-img-top" src={ImageUrl} alt="poster" />
           </div>
 
-          <div class="card-body">
-            <p class="card-text">
+          <div className="card-body">
+            <p className="card-text">
               <b>title:</b>{" "}
               {selectedResult.title
                 ? selectedResult.title
@@ -91,7 +91,7 @@ export class AddVideoInfo extends Component {
           </div>
         </div>
 
-        <div class="card-body">
+        <div className="card-body">
           <select
             id={selectedResult.title}
             name="selectedPlatform"
@@ -103,13 +103,13 @@ export class AddVideoInfo extends Component {
               Select your option
             </option>
             {/* To show subscriptions/platforms to choose from based only on user profile owned subscriptions/platforms */}
-            {availablePlatforms.map(eachPlatform => {
-              return <option value={eachPlatform}>{eachPlatform}</option>;
+            {availablePlatforms.map((eachPlatform, i) => {
+              return <option key={"option"+i} value={eachPlatform}>{eachPlatform}</option>;
             })}
           </select>
 
           <button
-            class="btn btn-info"
+            className="btn btn-info"
             onClick={event => this.addResult(event, selectedResult, ImageUrl)}
           >
             Add to Backlog
